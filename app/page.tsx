@@ -2,6 +2,7 @@
 
 import React from 'react';
 
+import PokemonCard from '@/components/pokemon-card';
 import { useGetPokemonListQuery } from '@/redux/services/pokemon-api';
 
 function Page() {
@@ -11,11 +12,9 @@ function Page() {
   if (isPokemonListLoading) return <div>Loading...</div>;
 
   return (
-    <div className="flex justify-center">
+    <div className="flex flex-wrap">
       {pokemonList.results.map((pokemon: any) => (
-        <div className="" key={pokemon.name}>
-          {pokemon?.name}
-        </div>
+        <PokemonCard key={pokemon.url} url={pokemon.url} />
       ))}
     </div>
   );
