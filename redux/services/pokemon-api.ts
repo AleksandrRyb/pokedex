@@ -13,3 +13,5 @@ export const pokemonApi = createApi({
     }),
   }),
 });
+
+export const { useGetPokemonsQuery } = pokemonApi;
