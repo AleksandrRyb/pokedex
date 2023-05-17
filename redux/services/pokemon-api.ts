@@ -8,10 +8,13 @@ export const pokemonApi = createApi({
     baseUrl: BASE_URL,
   }),
   endpoints: (builder) => ({
-    getPokemons: builder.query<any, null>({
-      query: () => 'pokemonList',
+    getPokemonList: builder.query<any, null>({
+      query: () => 'clefairy',
+    }),
+    getPokemon: builder.query<any, string>({
+      query: (url) => url,
     }),
   }),
 });
 
-export const { useGetPokemonsQuery } = pokemonApi;
+export const { useGetPokemonListQuery, useGetPokemonQuery } = pokemonApi;
