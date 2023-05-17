@@ -9,7 +9,7 @@
     "prettier/prettier": [
       "error",
       {
-        // "singleQuote": true,
+        "singleQuote": true,
         "endOfLine": "auto"
       }
     ]
@@ -17,7 +17,7 @@
   "overrides": [
     // Configuration for TypeScript files
     {
-      "files": ["app/**/*.ts", "app/**/*.tsx"],
+      "files": ["**/*.ts", "**/*.tsx"],
       "plugins": [
         "@typescript-eslint",
         "unused-imports",
