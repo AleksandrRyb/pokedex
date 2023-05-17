@@ -9,7 +9,7 @@ export const pokemonApi = createApi({
   }),
   endpoints: (builder) => ({
     getPokemonList: builder.query<any, null>({
-      query: () => 'clefairy',
+      query: () => '',
     }),
     getPokemon: builder.query<any, string>({
       query: (url) => url,
