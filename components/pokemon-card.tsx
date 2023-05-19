@@ -32,10 +32,10 @@ const PokemonCard = ({ url }: { url: string }) => {
 
           <div className="grid grid-cols-2 gap-2">
             <div className="text-sm text-gray-600">HP:</div>
-            <div className="text-sm">100</div>
+            <div className="text-sm">{pokemon.stats[0].base_stat}</div>
 
             <div className="text-sm text-gray-600">Attack:</div>
-            <div className="text-sm">80</div>
+            <div className="text-sm">{pokemon.stats[1].base_stat}</div>
           </div>
         </div>
       </div>
