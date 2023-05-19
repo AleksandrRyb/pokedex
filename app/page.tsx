@@ -13,7 +13,7 @@ function Page() {
 
   return (
     <div className="flex flex-wrap">
-      {pokemonList.results.map((pokemon: any) => (
+      {pokemonList?.results.map((pokemon: any) => (
         <PokemonCard key={pokemon.url} url={pokemon.url} />
       ))}
     </div>
