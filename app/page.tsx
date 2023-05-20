@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 
-import PokemonCard from '@/components/pokemon-card';
+import PokemonCard from '@/components/pokemon-card/pokemon-card';
 import { useGetPokemonListQuery } from '@/redux/services/pokemon-api';
 import type { NameUrlPair } from '@/types/Pokemon';
 
