@@ -8,7 +8,7 @@ import PokemonCardLoader from './pokemon-card-loader';
 
 interface IPokemonCard {
   url: string;
-  selectedTypes: [string];
+  selectedTypes: string[];
 }
 
 const PokemonCard = ({ url, selectedTypes }: IPokemonCard) => {

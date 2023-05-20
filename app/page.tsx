@@ -4,10 +4,9 @@ import React, { useState } from 'react';
 
 import PokemonCard from '@/components/pokemon-card/pokemon-card';
 import PokemonSearchFilter from '@/components/pokemon-filter/pokemon-search-filter';
+import PokemonSelectFilter from '@/components/pokemon-filter/pokemon-select-filter';
 import { useGetPokemonListQuery } from '@/redux/services/pokemon-api';
 import type { NameUrlPair } from '@/types/Pokemon';
-
-const options = ['water', 'fire', 'grasp'];
 
 function Page() {
   const { data: pokemonList, isLoading: isPokemonListLoading } =
@@ -44,27 +43,10 @@ function Page() {
         handleSearch={handleSearch}
         searchTerm={searchTerm}
       />
-      <div>
-        {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-        <label htmlFor="type-select">Select types:</label>
-        <select
-          id="type-select"
-          multiple
-          value={selectedTypes}
-          className="appearance-none rounded-md bg-yellow-500 px-4 py-3 text-white shadow-md focus:outline-none focus:ring-2 focus:ring-yellow-400"
-          onChange={handleTypeSelection}
-        >
-          {options.map((option) => (
-            <option
-              key={option}
-              value={option}
-              className="bg-yellow-500 text-white"
-            >
-              {option}
-            </option>
-          ))}
-        </select>
-      </div>
+      <PokemonSelectFilter
+        selectedTypes={selectedTypes}
+        handleTypeSelection={handleTypeSelection}
+      />
       <div className="flex flex-wrap">
         {filteredPokemons?.map((pokemon: NameUrlPair) => (
           <PokemonCard
