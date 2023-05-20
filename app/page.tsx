@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 
 import PokemonCard from '@/components/pokemon-card/pokemon-card';
+import PokemonSearchFilter from '@/components/pokemon-filter/pokemon-search-filter';
 import { useGetPokemonListQuery } from '@/redux/services/pokemon-api';
 import type { NameUrlPair } from '@/types/Pokemon';
 
@@ -39,15 +40,10 @@ function Page() {
 
   return (
     <>
-      <div className="flex items-center justify-center p-4">
-        <input
-          type="text"
-          placeholder="Search Pokémon"
-          value={searchTerm}
-          onChange={handleSearch}
-          className="mt-4 w-full rounded-md border border-gray-300 px-4 py-2 focus:border-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-500"
-        />
-      </div>
+      <PokemonSearchFilter
+        handleSearch={handleSearch}
+        searchTerm={searchTerm}
+      />
       <div>
         {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
         <label htmlFor="type-select">Select types:</label>
@@ -67,8 +63,6 @@ function Page() {
               {option}
             </option>
           ))}
-
-          {/* Add more type options here */}
         </select>
       </div>
       <div className="flex flex-wrap">

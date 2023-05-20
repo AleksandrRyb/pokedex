@@ -4,7 +4,7 @@ import React from 'react';
 
 import { useGetPokemonQuery } from '@/redux/services/pokemon-api';
 
-import PokemonCardLoader from '../pokemon-card-loader';
+import PokemonCardLoader from './pokemon-card-loader';
 
 interface IPokemonCard {
   url: string;
