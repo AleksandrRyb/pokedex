@@ -8,8 +8,6 @@ interface IPokemonSelectFilter {
   handleTypeSelection: (event: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
-const options = ['water', 'fire', 'grass'];
-
 const PokemonSelectFilter = ({
   selectedTypes,
   handleTypeSelection,
