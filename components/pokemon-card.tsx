@@ -6,11 +6,22 @@ import { useGetPokemonQuery } from '@/redux/services/pokemon-api';
 
 import PokemonCardLoader from './pokemon-card-loader';
 
-const PokemonCard = ({ url }: { url: string }) => {
+interface IPokemonCard {
+  url: string;
+  selectedTypes: [string];
+}
+
+const PokemonCard = ({ url, selectedTypes }: IPokemonCard) => {
   const { data: pokemon, isLoading: isPokemonLoading } =
     useGetPokemonQuery(url);
 
   if (isPokemonLoading) return <PokemonCardLoader />;
+
+  if (
+    !selectedTypes.includes(pokemon?.types[0].type.name as string) &&
+    selectedTypes.length > 0
+  )
+    return null;
 
   return (
     <div className="w-full p-4 sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/6">
