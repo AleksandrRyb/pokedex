@@ -16,13 +16,14 @@ function Page() {
 
   const [selectedTypes, setSelectedTypes] = useState<any[]>([]);
 
-  const handleTypeSelection = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const { value } = event.target;
+  const handleTypeSelection = (event: React.MouseEvent<HTMLSelectElement>) => {
+    const { value } = event.target as HTMLSelectElement;
 
     setSelectedTypes((prevSelectedTypes) => {
       if (prevSelectedTypes.includes(value)) {
         return prevSelectedTypes.filter((type) => type !== value);
       }
+
       return [...prevSelectedTypes, value];
     });
   };

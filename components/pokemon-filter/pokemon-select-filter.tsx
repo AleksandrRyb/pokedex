@@ -5,7 +5,7 @@ import type { NameUrlPair } from '@/types/Pokemon';
 
 interface IPokemonSelectFilter {
   selectedTypes: string[];
-  handleTypeSelection: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+  handleTypeSelection: (event: React.MouseEvent<HTMLSelectElement>) => void;
 }
 
 const PokemonSelectFilter = ({
@@ -26,7 +26,7 @@ const PokemonSelectFilter = ({
         multiple
         value={selectedTypes}
         className="appearance-none rounded-md bg-yellow-500 px-4 py-3 text-white shadow-md focus:outline-none focus:ring-2 focus:ring-yellow-400"
-        onChange={handleTypeSelection}
+        onClick={handleTypeSelection}
       >
         {pokemonTypes?.results.map((typeObj: NameUrlPair) => (
           <option
