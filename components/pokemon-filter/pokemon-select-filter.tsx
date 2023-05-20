@@ -1,6 +1,6 @@
 import React from 'react';
 
-interface IPokemonSelectFitler {
+interface IPokemonSelectFilter {
   selectedTypes: string[];
   handleTypeSelection: (event: React.ChangeEvent<HTMLSelectElement>) => void;
 }
@@ -10,7 +10,7 @@ const options = ['water', 'fire', 'grass'];
 const PokemonSelectFilter = ({
   selectedTypes,
   handleTypeSelection,
-}: IPokemonSelectFitler) => {
+}: IPokemonSelectFilter) => {
   return (
     <div>
       {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
