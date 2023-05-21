@@ -16,16 +16,9 @@ function Page() {
 
   const [selectedTypes, setSelectedTypes] = useState<any[]>([]);
 
-  const handleTypeSelection = (event: React.MouseEvent<HTMLSelectElement>) => {
-    const { value } = event.target as HTMLSelectElement;
-
-    setSelectedTypes((prevSelectedTypes) => {
-      if (prevSelectedTypes.includes(value)) {
-        return prevSelectedTypes.filter((type) => type !== value);
-      }
-
-      return [...prevSelectedTypes, value];
-    });
+  const handleTypeSelection = (types: any) => {
+    const onlyTypesValues = types.map((type: any) => type.value);
+    setSelectedTypes([...onlyTypesValues]);
   };
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,10 +37,7 @@ function Page() {
         handleSearch={handleSearch}
         searchTerm={searchTerm}
       />
-      <PokemonSelectFilter
-        selectedTypes={selectedTypes}
-        handleTypeSelection={handleTypeSelection}
-      />
+      <PokemonSelectFilter handleTypeSelection={handleTypeSelection} />
       <div className="flex flex-wrap">
         {filteredPokemons?.map((pokemon: NameUrlPair) => (
           <PokemonCard

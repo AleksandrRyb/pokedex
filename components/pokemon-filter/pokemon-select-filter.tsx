@@ -1,17 +1,42 @@
 import React from 'react';
+import Select from 'react-select';
 
 import { useGetPokemonTypesQuery } from '@/redux/services/pokemon-api';
 import type { NameUrlPair } from '@/types/Pokemon';
 
 interface IPokemonSelectFilter {
-  selectedTypes: string[];
-  handleTypeSelection: (event: React.MouseEvent<HTMLSelectElement>) => void;
+  handleTypeSelection: any;
 }
 
-const PokemonSelectFilter = ({
-  selectedTypes,
-  handleTypeSelection,
-}: IPokemonSelectFilter) => {
+const customStyles = {
+  control: (provided, state) => ({
+    ...provided,
+    padding: '2px 0 2px 4px',
+    borderWidth: '1px',
+    borderRadius: '0.375rem',
+    borderColor: state.isFocused ? 'none' : 'rgb(209, 213, 219)',
+    boxShadow: state.isFocused
+      ? '0px 0px 0px 3px rgba(234, 179, 8, 1)'
+      : 'none',
+    '&:hover': {
+      borderColor: 'none',
+    },
+  }),
+  option: (provided, state) => ({
+    ...provided,
+    backgroundColor: state.isFocused ? 'gray-200' : 'white',
+    color: 'black',
+    '&:hover': {
+      backgroundColor: 'rgba(234, 179, 8, 0.6)',
+    },
+  }),
+  placeholder: (provided) => ({
+    ...provided,
+    color: 'rgba(0,0,0, 0.4)', // Change the color to your desired value
+  }),
+};
+
+const PokemonSelectFilter = ({ handleTypeSelection }: IPokemonSelectFilter) => {
   const { data: pokemonTypes, isLoading: isLoadingPokemonTypes } =
     useGetPokemonTypesQuery(null);
 
@@ -19,25 +44,15 @@ const PokemonSelectFilter = ({
 
   return (
     <div>
-      {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-      <label htmlFor="type-select">Select types:</label>
-      <select
-        id="type-select"
-        multiple
-        value={selectedTypes}
-        className="appearance-none rounded-md bg-yellow-500 px-4 py-3 text-white shadow-md focus:outline-none focus:ring-2 focus:ring-yellow-400"
-        onClick={handleTypeSelection}
-      >
-        {pokemonTypes?.results.map((typeObj: NameUrlPair) => (
-          <option
-            key={typeObj.name}
-            value={typeObj.name}
-            className="bg-yellow-500 text-white"
-          >
-            {typeObj.name}
-          </option>
-        ))}
-      </select>
+      <Select
+        styles={customStyles}
+        className="mx-4"
+        onChange={handleTypeSelection}
+        isMulti
+        options={pokemonTypes?.results.map((typeObj: NameUrlPair) => {
+          return { value: typeObj.name, label: typeObj.name };
+        })}
+      />
     </div>
   );
 };

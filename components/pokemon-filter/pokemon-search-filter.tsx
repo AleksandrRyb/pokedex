@@ -18,7 +18,7 @@ const PokemonSearchFilter = ({
         placeholder="Search Pokémon"
         value={searchTerm}
         onChange={handleSearch}
-        className="mt-4 w-full rounded-md border border-gray-300 px-4 py-2 focus:border-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+        className="mt-4 w-full rounded-md border border-gray-300 px-4 py-2 placeholder:text-black/[0.4] focus:border-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-500"
       />
     </div>
   );
