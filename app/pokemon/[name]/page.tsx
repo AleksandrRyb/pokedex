@@ -2,18 +2,15 @@ import Image from 'next/image';
 import React from 'react';
 
 import type { Pokemon } from '@/types/Pokemon';
+import { capitalize } from '@/utils/string-utils';
 
 interface IPokemonPage {
   params: { [key: string]: string };
 }
 
 export const generateMetadata = async ({ params }: IPokemonPage) => {
-  const capitalizedPokemonName = `${params.name
-    .charAt(0)
-    .toUpperCase()}${params.name.slice(1)}`;
-
   return {
-    title: `${capitalizedPokemonName} Info`,
+    title: `${capitalize(params.name)} Info`,
   };
 };
 
@@ -32,11 +29,11 @@ const PokemonPage: React.FC<IPokemonPage> = async ({ params: { name } }) => {
   const pokemon = await getPokemon(name);
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto min-w-min px-4 py-8">
       <div className="overflow-hidden rounded-lg bg-white shadow-lg">
         <div className="bg-blue-500 px-4 py-6">
           <h1 className="text-center text-3xl font-bold text-white">
-            {} Detail Page
+            {capitalize(pokemon.name)} Detail Page
           </h1>
         </div>
         <div className="p-4">
@@ -48,7 +45,7 @@ const PokemonPage: React.FC<IPokemonPage> = async ({ params: { name } }) => {
               height={500}
             />
           </div>
-          <div className="mt-8">
+          <div className="mt-8 flex flex-col items-center">
             <h2 className="mb-4 text-2xl font-bold">Name: {pokemon.name}</h2>
             <p className="mb-4">
               <span className="font-bold">Height:</span> {pokemon.height}

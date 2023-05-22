@@ -6,6 +6,9 @@ export interface NameUrlPair {
 interface Ability extends NameUrlPair {
   is_hidden: boolean;
   slot: number;
+  ability: {
+    name: string;
+  };
 }
 
 interface Move extends NameUrlPair {}
