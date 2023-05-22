@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import React from 'react';
 
 import { useGetPokemonQuery } from '@/redux/services/pokemon-api';
@@ -24,7 +25,10 @@ const PokemonCard = ({ url, selectedTypes }: IPokemonCard) => {
     return null;
 
   return (
-    <div className="w-full p-4 sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/6">
+    <Link
+      href={`pokemon/${pokemon?.name}`}
+      className="w-full p-4 sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/6"
+    >
       <div className="overflow-hidden rounded-lg bg-white shadow-md">
         <img
           src={pokemon?.sprites.front_default}
@@ -50,7 +54,7 @@ const PokemonCard = ({ url, selectedTypes }: IPokemonCard) => {
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 
