@@ -49,6 +49,7 @@ const PokemonSelectFilter = ({ handleTypeSelection }: IPokemonSelectFilter) => {
         className="mx-4"
         onChange={handleTypeSelection}
         isMulti
+        placeholder="Select Pokemon Type"
         options={pokemonTypes?.results.map((typeObj: NameUrlPair) => {
           return { value: typeObj.name, label: typeObj.name };
         })}
