@@ -13,21 +13,22 @@ import {
 } from '@/constants/ui-libriries-constants';
 import { useGetPokemonListQuery } from '@/redux/services/pokemon-api';
 import type { NameUrlPair } from '@/types/Pokemon';
-import { calculatePageCount } from '@/utils/math-utils';
+import { calculateOffset, calculatePageCount } from '@/utils/math-utils';
 
 function Page() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedPokemonTypes, setSelectedPokemonTypes] = useState<any[]>([]);
-  const [currentPage, setCurrentPage] = useState<number>(0);
-  const [pokemonsPerPage, setPokemonsPerPage] = useState<number>(
-    perPageCounts[0].value
-  );
+  const [offset, setOffset] = useState<number>(0);
+  const [limit, setLimit] = useState<number>(perPageCounts[0].value);
   const { data: pokemonList, isLoading: isPokemonListLoading } =
     useGetPokemonListQuery({
-      limit: pokemonsPerPage,
-      offset: pokemonsPerPage * currentPage,
+      limit,
+      offset,
     });
-  console.log(pokemonList);
+
+  const filteredPokemons = pokemonList?.results.filter((pokemon) => {
+    return pokemon.name.toLowerCase().includes(searchTerm.toLowerCase());
+  });
 
   const handleTypeSelection = (types: any) => {
     const onlyTypesValues = types.map((type: any) => type.value);
@@ -38,12 +39,13 @@ function Page() {
     setSearchTerm(event.target.value);
   };
 
-  const filteredPokemons = pokemonList?.results.filter((pokemon) => {
-    return pokemon.name.toLowerCase().includes(searchTerm.toLowerCase());
-  });
-
   const handlePageChange = (selectedItem: { selected: number }) => {
-    setCurrentPage(selectedItem.selected);
+    const calculateOffsetData = {
+      limit,
+      totalCount: pokemonList?.count as number,
+      currentPage: selectedItem.selected,
+    };
+    setOffset(calculateOffset(calculateOffsetData));
   };
 
   if (isPokemonListLoading) return <div>Loading...</div>;
@@ -58,7 +60,7 @@ function Page() {
       <Select
         styles={customStyles}
         options={perPageCounts}
-        onChange={(data) => setPokemonsPerPage(data?.value)}
+        onChange={(data) => setLimit(data?.value as number)}
         defaultValue={perPageCounts[0]}
         className="mx-4 mt-4"
         placeholder="Show pokemons per page"
@@ -74,10 +76,7 @@ function Page() {
       </div>
 
       <Pagination
-        pageCount={calculatePageCount(
-          pokemonList?.count as number,
-          pokemonsPerPage
-        )}
+        pageCount={calculatePageCount(pokemonList?.count as number, limit)}
         onPageChange={handlePageChange}
       />
     </>
