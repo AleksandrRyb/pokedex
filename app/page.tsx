@@ -13,6 +13,7 @@ import {
 } from '@/constants/ui-libriries-constants';
 import { useGetPokemonListQuery } from '@/redux/services/pokemon-api';
 import type { NameUrlPair } from '@/types/Pokemon';
+import { calculatePageCount } from '@/utils/math-utils';
 
 function Page() {
   const { data: pokemonList, isLoading: isPokemonListLoading } =
@@ -21,7 +22,9 @@ function Page() {
 
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedPokemonTypes, setSelectedPokemonTypes] = useState<any[]>([]);
-  const [pakemonsPerPage, setPokemonsPerPage] = useState<number | null>();
+  const [pokemonsPerPage, setPokemonsPerPage] = useState<number>(
+    perPageCounts[0].value
+  );
 
   const handleTypeSelection = (types: any) => {
     const onlyTypesValues = types.map((type: any) => type.value);
@@ -63,7 +66,12 @@ function Page() {
         ))}
       </div>
 
-      <Pagination pageCount={pokemonList?.count as number} />
+      <Pagination
+        pageCount={calculatePageCount(
+          pokemonList?.count as number,
+          pokemonsPerPage
+        )}
+      />
     </>
   );
 }
