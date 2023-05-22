@@ -11,6 +11,7 @@ import type { NameUrlPair } from '@/types/Pokemon';
 function Page() {
   const { data: pokemonList, isLoading: isPokemonListLoading } =
     useGetPokemonListQuery(null);
+  console.log(pokemonList);
 
   const [searchTerm, setSearchTerm] = useState('');
 
