@@ -47,7 +47,9 @@ const PokemonPage: React.FC<IPokemonPage> = async ({ params: { name } }) => {
             />
           </div>
           <div className="mt-8 flex flex-col items-center">
-            <h2 className="mb-4 text-2xl font-bold">Name: {pokemon.name}</h2>
+            <h2 className="mb-4 text-2xl font-bold">
+              Name: {capitalize(pokemon.name)}
+            </h2>
             <p className="mb-4">
               <span className="font-bold">Height:</span> {pokemon.height}
             </p>
