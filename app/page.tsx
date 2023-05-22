@@ -14,6 +14,7 @@ import {
 import { useGetPokemonListQuery } from '@/redux/services/pokemon-api';
 import type { NameUrlPair } from '@/types/Pokemon';
 import { calculateOffset, calculatePageCount } from '@/utils/math-utils';
+import { saveItemToSessionStorage } from '@/utils/storage-utils';
 
 function Page() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -45,7 +46,15 @@ function Page() {
       totalCount: pokemonList?.count as number,
       currentPage: selectedItem.selected,
     };
-    setOffset(calculateOffset(calculateOffsetData));
+
+    const calculatedOffset = calculateOffset(calculateOffsetData);
+
+    saveItemToSessionStorage('pokemonsPage', {
+      limit,
+      offset: calculatedOffset,
+      currentPage: selectedItem.selected,
+    });
+    setOffset(calculatedOffset);
   };
 
   if (isPokemonListLoading) return <div>Loading...</div>;
