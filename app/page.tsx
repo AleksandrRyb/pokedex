@@ -1,11 +1,15 @@
 'use client';
 
 import React, { useState } from 'react';
+import Select from 'react-select';
 
-import Pagination from '@/components/pagination/pagination';
 import PokemonCard from '@/components/pokemon-card/pokemon-card';
 import PokemonSearchFilter from '@/components/pokemon-filter/pokemon-search-filter';
 import PokemonSelectFilter from '@/components/pokemon-filter/pokemon-select-filter';
+import {
+  customStyles,
+  perPageCounts,
+} from '@/constants/ui-libriries-constants';
 import { useGetPokemonListQuery } from '@/redux/services/pokemon-api';
 import type { NameUrlPair } from '@/types/Pokemon';
 
@@ -15,8 +19,8 @@ function Page() {
   console.log(pokemonList);
 
   const [searchTerm, setSearchTerm] = useState('');
-
   const [selectedPokemonTypes, setSelectedPokemonTypes] = useState<any[]>([]);
+  const [pakemonsPerPage, setPokemonsPerPage] = useState<number | null>();
 
   const handleTypeSelection = (types: any) => {
     const onlyTypesValues = types.map((type: any) => type.value);
@@ -40,6 +44,14 @@ function Page() {
         searchTerm={searchTerm}
       />
       <PokemonSelectFilter handleTypeSelection={handleTypeSelection} />
+      <Select
+        styles={customStyles}
+        options={perPageCounts}
+        onChange={(data) => setPokemonsPerPage(data?.value)}
+        defaultValue={perPageCounts[0]}
+        className="mx-4 mt-4"
+        placeholder="Show pokemons per page"
+      />
       <div className="flex flex-wrap">
         {filteredPokemons?.map((pokemon: NameUrlPair) => (
           <PokemonCard
@@ -49,6 +61,7 @@ function Page() {
           />
         ))}
       </div>
+
       {/* <Pagination /> */}
     </>
   );
