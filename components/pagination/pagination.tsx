@@ -32,7 +32,7 @@ const Pagination: React.FC<IPagination> = ({
       containerClassName="flex flex-wrap justify-center my-4"
       pageClassName="px-2 py-1 mx-1 rounded-md bg-yellow-300 text-black/[0.8]"
       pageLinkClassName="cursor-pointer"
-      activeClassName="bg-yellow-500 text-white"
+      activeClassName="bg-yellow-600/[.7]"
     />
   );
 };

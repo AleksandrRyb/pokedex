@@ -43,8 +43,9 @@ function Page() {
     }>('pokemonsPage');
 
     if (pageData) {
-      setLimit(pageData?.limit as number);
-      setOffset(pageData?.offset as number);
+      setLimit(pageData?.limit);
+      setOffset(pageData?.offset);
+      setCurrentPage(pageData?.currentPage);
     }
   }, []);
 
