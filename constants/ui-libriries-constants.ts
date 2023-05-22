@@ -25,3 +25,5 @@ export const customStyles = {
     color: 'rgba(0,0,0, 0.4)', // Change the color to your desired value
   }),
 };
+
+export const perPageCounts = [10, 20, 50];
