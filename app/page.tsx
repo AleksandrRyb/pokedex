@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Select from 'react-select';
 
+import Pagination from '@/components/pagination/pagination';
 import PokemonCard from '@/components/pokemon-card/pokemon-card';
 import PokemonSearchFilter from '@/components/pokemon-filter/pokemon-search-filter';
 import PokemonSelectFilter from '@/components/pokemon-filter/pokemon-select-filter';
@@ -62,7 +63,7 @@ function Page() {
         ))}
       </div>
 
-      {/* <Pagination /> */}
+      <Pagination pageCount={pokemonList?.count as number} />
     </>
   );
 }

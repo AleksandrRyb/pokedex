@@ -10,7 +10,10 @@ export const pokemonApi = createApi({
     baseUrl: POKEMON_API_BASE_URL,
   }),
   endpoints: (builder) => ({
-    getPokemonList: builder.query<{ results: NameUrlPair[] }, null>({
+    getPokemonList: builder.query<
+      { results: NameUrlPair[]; count: number },
+      null
+    >({
       query: () => '/pokemon',
     }),
     getPokemon: builder.query<Pokemon, string>({
