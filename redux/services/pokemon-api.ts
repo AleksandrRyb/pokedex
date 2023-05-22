@@ -1,14 +1,13 @@
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
+import { POKEMON_API_BASE_URL } from '@/constants/services-constants';
 import type { NameUrlPair, Pokemon } from '@/types/Pokemon';
-
-const BASE_URL = 'https://pokeapi.co/api/v2';
 
 export const pokemonApi = createApi({
   reducerPath: 'pokemonApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: BASE_URL,
+    baseUrl: POKEMON_API_BASE_URL,
   }),
   endpoints: (builder) => ({
     getPokemonList: builder.query<{ results: NameUrlPair[] }, null>({

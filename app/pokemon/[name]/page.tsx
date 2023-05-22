@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import React from 'react';
 
+import { POKEMON_API_BASE_URL } from '@/constants/services-constants';
 import type { Pokemon } from '@/types/Pokemon';
 import { capitalize } from '@/utils/string-utils';
 
@@ -15,7 +16,7 @@ export const generateMetadata = async ({ params }: IPokemonPage) => {
 };
 
 const getPokemon = async (name: string): Promise<Pokemon> => {
-  const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
+  const res = await fetch(`${POKEMON_API_BASE_URL}/pokemon/${name}`);
 
   if (!res.ok) {
     throw new Error('Server error when fetching');
