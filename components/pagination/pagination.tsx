@@ -6,11 +6,17 @@ import ReactPaginate from 'react-paginate';
 interface IPagination {
   pageCount: number;
   onPageChange: (selectedItem: { selected: number }) => void;
+  forcePage: number;
 }
 
-const Pagination: React.FC<IPagination> = ({ pageCount, onPageChange }) => {
+const Pagination: React.FC<IPagination> = ({
+  pageCount,
+  onPageChange,
+  forcePage,
+}) => {
   return (
     <ReactPaginate
+      forcePage={forcePage}
       onPageChange={onPageChange}
       previousLabel="Previous"
       nextLabel="Next"

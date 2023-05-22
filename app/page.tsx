@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Select from 'react-select';
 
 import Pagination from '@/components/pagination/pagination';
@@ -14,13 +14,17 @@ import {
 import { useGetPokemonListQuery } from '@/redux/services/pokemon-api';
 import type { NameUrlPair } from '@/types/Pokemon';
 import { calculateOffset, calculatePageCount } from '@/utils/math-utils';
-import { saveItemToSessionStorage } from '@/utils/storage-utils';
+import {
+  getItemFromSessionStorage,
+  saveItemToSessionStorage,
+} from '@/utils/storage-utils';
 
 function Page() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedPokemonTypes, setSelectedPokemonTypes] = useState<any[]>([]);
   const [offset, setOffset] = useState<number>(0);
   const [limit, setLimit] = useState<number>(perPageCounts[0].value);
+  const [currentPage, setCurrentPage] = useState<number>(0);
   const { data: pokemonList, isLoading: isPokemonListLoading } =
     useGetPokemonListQuery({
       limit,
@@ -30,6 +34,19 @@ function Page() {
   const filteredPokemons = pokemonList?.results.filter((pokemon) => {
     return pokemon.name.toLowerCase().includes(searchTerm.toLowerCase());
   });
+
+  useEffect(() => {
+    const pageData = getItemFromSessionStorage<{
+      limit: number;
+      offset: number;
+      currentPage: number;
+    }>('pokemonsPage');
+
+    if (pageData) {
+      setLimit(pageData?.limit as number);
+      setOffset(pageData?.offset as number);
+    }
+  }, []);
 
   const handleTypeSelection = (types: any) => {
     const onlyTypesValues = types.map((type: any) => type.value);
@@ -54,6 +71,7 @@ function Page() {
       offset: calculatedOffset,
       currentPage: selectedItem.selected,
     });
+    setCurrentPage(selectedItem.selected);
     setOffset(calculatedOffset);
   };
 
@@ -87,6 +105,7 @@ function Page() {
       <Pagination
         pageCount={calculatePageCount(pokemonList?.count as number, limit)}
         onPageChange={handlePageChange}
+        forcePage={currentPage}
       />
     </>
   );
