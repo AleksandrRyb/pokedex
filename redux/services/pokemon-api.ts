@@ -12,9 +12,9 @@ export const pokemonApi = createApi({
   endpoints: (builder) => ({
     getPokemonList: builder.query<
       { results: NameUrlPair[]; count: number },
-      null
+      { limit: number; offset: number }
     >({
-      query: () => '/pokemon',
+      query: ({ limit, offset }) => `/pokemon/?limit=${limit}&offset=${offset}`,
     }),
     getPokemon: builder.query<Pokemon, string>({
       queryFn: async (_arg, _queryApi, _extraOptions, fetchWithBQ) => {

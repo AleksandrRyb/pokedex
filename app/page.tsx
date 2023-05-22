@@ -16,15 +16,18 @@ import type { NameUrlPair } from '@/types/Pokemon';
 import { calculatePageCount } from '@/utils/math-utils';
 
 function Page() {
-  const { data: pokemonList, isLoading: isPokemonListLoading } =
-    useGetPokemonListQuery(null);
-  console.log(pokemonList);
-
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedPokemonTypes, setSelectedPokemonTypes] = useState<any[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(0);
   const [pokemonsPerPage, setPokemonsPerPage] = useState<number>(
     perPageCounts[0].value
   );
+  const { data: pokemonList, isLoading: isPokemonListLoading } =
+    useGetPokemonListQuery({
+      limit: pokemonsPerPage,
+      offset: pokemonsPerPage * currentPage,
+    });
+  console.log(pokemonList);
 
   const handleTypeSelection = (types: any) => {
     const onlyTypesValues = types.map((type: any) => type.value);
@@ -38,6 +41,10 @@ function Page() {
   const filteredPokemons = pokemonList?.results.filter((pokemon) => {
     return pokemon.name.toLowerCase().includes(searchTerm.toLowerCase());
   });
+
+  const handlePageChange = (selectedItem: { selected: number }) => {
+    setCurrentPage(selectedItem.selected);
+  };
 
   if (isPokemonListLoading) return <div>Loading...</div>;
 
@@ -71,6 +78,7 @@ function Page() {
           pokemonList?.count as number,
           pokemonsPerPage
         )}
+        onPageChange={handlePageChange}
       />
     </>
   );

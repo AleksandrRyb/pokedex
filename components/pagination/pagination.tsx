@@ -5,11 +5,13 @@ import ReactPaginate from 'react-paginate';
 
 interface IPagination {
   pageCount: number;
+  onPageChange: (selectedItem: { selected: number }) => void;
 }
 
-const Pagination: React.FC<IPagination> = ({ pageCount }) => {
+const Pagination: React.FC<IPagination> = ({ pageCount, onPageChange }) => {
   return (
     <ReactPaginate
+      onPageChange={onPageChange}
       previousLabel="Previous"
       nextLabel="Next"
       breakLabel="..."
