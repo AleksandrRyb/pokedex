@@ -16,11 +16,11 @@ function Page() {
 
   const [searchTerm, setSearchTerm] = useState('');
 
-  const [selectedTypes, setSelectedTypes] = useState<any[]>([]);
+  const [selectedPokemonTypes, setSelectedPokemonTypes] = useState<any[]>([]);
 
   const handleTypeSelection = (types: any) => {
     const onlyTypesValues = types.map((type: any) => type.value);
-    setSelectedTypes([...onlyTypesValues]);
+    setSelectedPokemonTypes([...onlyTypesValues]);
   };
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,12 +44,12 @@ function Page() {
         {filteredPokemons?.map((pokemon: NameUrlPair) => (
           <PokemonCard
             key={pokemon.url}
-            selectedTypes={selectedTypes}
+            selectedPokemonTypes={selectedPokemonTypes}
             url={pokemon.url}
           />
         ))}
       </div>
-      <Pagination />
+      {/* <Pagination /> */}
     </>
   );
 }

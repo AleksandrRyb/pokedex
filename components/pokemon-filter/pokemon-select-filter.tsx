@@ -1,7 +1,7 @@
 import React from 'react';
 import Select from 'react-select';
 
-import { customStyles } from '@/constants/react-select-constants';
+import { customStyles } from '@/constants/ui-libriries-constants';
 import { useGetPokemonTypesQuery } from '@/redux/services/pokemon-api';
 import type { NameUrlPair } from '@/types/Pokemon';
 

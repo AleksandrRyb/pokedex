@@ -9,18 +9,18 @@ import PokemonCardLoader from './pokemon-card-loader';
 
 interface IPokemonCard {
   url: string;
-  selectedTypes: string[];
+  selectedPokemonTypes: string[];
 }
 
-const PokemonCard = ({ url, selectedTypes }: IPokemonCard) => {
+const PokemonCard = ({ url, selectedPokemonTypes }: IPokemonCard) => {
   const { data: pokemon, isLoading: isPokemonLoading } =
     useGetPokemonQuery(url);
 
   if (isPokemonLoading) return <PokemonCardLoader />;
 
   if (
-    !selectedTypes.includes(pokemon?.types[0].type.name as string) &&
-    selectedTypes.length > 0
+    !selectedPokemonTypes.includes(pokemon?.types[0].type.name as string) &&
+    selectedPokemonTypes.length > 0
   )
     return null;
 
