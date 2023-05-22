@@ -1,11 +1,23 @@
 import Image from 'next/image';
 import React from 'react';
 
+import type { Pokemon } from '@/types/Pokemon';
+
 interface IPokemonPage {
   params: { [key: string]: string };
 }
 
-const getPokemon = async (name: string) => {
+export const generateMetadata = async ({ params }: IPokemonPage) => {
+  const capitalizedPokemonName = `${params.name
+    .charAt(0)
+    .toUpperCase()}${params.name.slice(1)}`;
+
+  return {
+    title: `${capitalizedPokemonName} Info`,
+  };
+};
+
+const getPokemon = async (name: string): Promise<Pokemon> => {
   const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
 
   if (!res.ok) {
