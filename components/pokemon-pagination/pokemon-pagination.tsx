@@ -28,8 +28,7 @@ const PokemonPagination: React.FC<IPagination> = ({
       nextLinkClassName="cursor-pointer"
       disabledClassName="cursor-not-allowed opacity-50"
       containerClassName="flex flex-wrap justify-center my-4"
-      pageClassName="px-2 py-1 mx-1 rounded-md bg-yellow-300 text-black/[0.8]"
-      pageLinkClassName="cursor-pointer"
+      pageClassName="px-2 py-1 mx-1 rounded-md bg-yellow-300 text-black/[0.8] cursor-pointer"
       activeClassName="bg-yellow-600/[.7]"
     />
   );
