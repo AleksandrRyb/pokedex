@@ -9,6 +9,7 @@ import PokemonCard from '@/components/pokemon-card/pokemon-card';
 import PokemonSearchFilter from '@/components/pokemon-filter/pokemon-search-filter';
 import PokemonSelectFilter from '@/components/pokemon-filter/pokemon-select-filter';
 import Pagination from '@/components/pokemon-pagination/pokemon-pagination';
+import { AppPages } from '@/constants/pages-constants';
 import {
   customStyles,
   perPageCounts,
@@ -51,7 +52,7 @@ function Page() {
       limit: { label: number; value: number };
       offset: number;
       currentPage: number;
-    }>('pokemonsPage');
+    }>(AppPages.POKEMONS_PAGE);
     if (pageData) {
       setLimit(pageData?.limit);
       setOffset(pageData?.offset);
@@ -79,7 +80,7 @@ function Page() {
 
     const calculatedOffset = calculateOffset(calculateOffsetData);
 
-    saveItemToSessionStorage('pokemonsPage', {
+    saveItemToSessionStorage(AppPages.POKEMONS_PAGE, {
       limit,
       offset: calculatedOffset,
       currentPage: selectedItem.selected,
@@ -92,7 +93,7 @@ function Page() {
     data: SingleValue<{ label: number; value: number }>
   ) => {
     setLimit((prevState) => {
-      saveItemToSessionStorage('pokemonsPage', {
+      saveItemToSessionStorage(AppPages.POKEMONS_PAGE, {
         limit: data,
         offset,
         currentPage,
