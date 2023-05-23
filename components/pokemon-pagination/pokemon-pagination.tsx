@@ -20,18 +20,15 @@ const PokemonPagination: React.FC<IPagination> = ({
       onPageChange={onPageChange}
       previousLabel="Previous"
       nextLabel="Next"
-      breakLabel="..."
       pageCount={pageCount}
+      breakLabel={false}
       previousClassName="px-2 py-1 mx-1 rounded-md bg-yellow-300 text-black/[0.8]"
       nextClassName="px-2 py-1 mx-1 rounded-md bg-yellow-300 text-black/[0.8]"
       previousLinkClassName="cursor-pointer"
       nextLinkClassName="cursor-pointer"
-      breakClassName="px-2 py-1 mx-1 text-black/[0.8]"
-      breakLinkClassName="cursor-pointer"
       disabledClassName="cursor-not-allowed opacity-50"
       containerClassName="flex flex-wrap justify-center my-4"
-      pageClassName="px-2 py-1 mx-1 rounded-md bg-yellow-300 text-black/[0.8]"
-      pageLinkClassName="cursor-pointer"
+      pageClassName="px-2 py-1 mx-1 rounded-md bg-yellow-300 text-black/[0.8] cursor-pointer"
       activeClassName="bg-yellow-600/[.7]"
     />
   );

@@ -25,9 +25,9 @@ import {
 function Page() {
   const [searchTerm, setSearchTerm] = useState('');
 
-  const [selectedPokemonTypes, setSelectedPokemonTypes] = useState<string[]>(
-    []
-  );
+  const [selectedPokemonTypes, setSelectedPokemonTypes] = useState<
+    { label: string; value: string }[]
+  >([]);
 
   const [offset, setOffset] = useState<number>(0);
 
@@ -61,10 +61,7 @@ function Page() {
   }, []);
 
   const handleTypeSelection = (types: { value: string; label: string }[]) => {
-    const onlyTypesValues = types.map(
-      (type: { value: string; label: string }) => type.value
-    );
-    setSelectedPokemonTypes([...onlyTypesValues]);
+    setSelectedPokemonTypes([...types]);
   };
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -87,6 +84,7 @@ function Page() {
     });
     setCurrentPage(selectedItem.selected);
     setOffset(calculatedOffset);
+    setSelectedPokemonTypes([]);
   };
 
   const handleLimitChange = (
@@ -115,7 +113,10 @@ function Page() {
         handleSearch={handleSearch}
         searchTerm={searchTerm}
       />
-      <PokemonSelectFilter handleTypeSelection={handleTypeSelection} />
+      <PokemonSelectFilter
+        value={selectedPokemonTypes}
+        handleTypeSelection={handleTypeSelection}
+      />
       <Select
         value={limit}
         styles={customStyles}
