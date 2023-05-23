@@ -30,11 +30,16 @@ const PokemonCard = ({ url, selectedPokemonTypes }: IPokemonCard) => {
       className="w-full p-4 sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/6"
     >
       <div className="overflow-hidden rounded-lg bg-white shadow-md">
-        <img
-          src={pokemon?.sprites.front_default}
-          alt="Pokemon Avatar"
-          className="h-40 w-full object-cover"
-        />
+        <div className="flex w-full justify-center">
+          {' '}
+          <img
+            src={pokemon?.sprites.front_default as string}
+            alt="Pokemon Avatar"
+            width={100}
+            height={100}
+            className="h-48 w-48"
+          />
+        </div>
 
         <div className="p-4">
           <h3 className="mb-2 text-xl font-semibold">{pokemon?.name}</h3>

@@ -1,9 +1,10 @@
+// eslint-disable-next-line consistent-return
 export const saveItemToSessionStorage = <T>(key: string, value: T) => {
   try {
     const serializedValue = JSON.stringify(value);
     sessionStorage.setItem(key, serializedValue);
   } catch (error) {
-    console.error(`Error saving item to session storage: ${error}`);
+    return null;
   }
 };
 
@@ -16,7 +17,6 @@ export const getItemFromSessionStorage = <T>(key: string): T | null => {
     const deserializedValue = JSON.parse(serializedValue);
     return deserializedValue as T;
   } catch (error) {
-    console.error(`Error retrieving item from session storage: ${error}`);
     return null;
   }
 };

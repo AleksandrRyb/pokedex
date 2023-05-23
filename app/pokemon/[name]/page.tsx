@@ -1,5 +1,6 @@
-import Image from 'next/image';
+import Link from 'next/link';
 import React from 'react';
+import { v4 as uuidv4 } from 'uuid';
 
 import { POKEMON_API_BASE_URL } from '@/constants/services-constants';
 import type { Pokemon } from '@/types/Pokemon';
@@ -32,16 +33,16 @@ const PokemonPage: React.FC<IPokemonPage> = async ({ params: { name } }) => {
   return (
     <div className="container mx-auto min-w-min px-4 py-8">
       <div className="overflow-hidden rounded-lg bg-white shadow-lg">
-        <div className="bg-blue-500 px-4 py-6">
+        <div className="bg-yellow-500  px-4 py-6">
           <h1 className="text-center text-3xl font-bold text-white">
             {capitalize(pokemon.name)} Detail Page
           </h1>
         </div>
         <div className="p-4">
           <div className="flex justify-center">
-            <Image
+            <img
               src={pokemon.sprites.front_default}
-              alt="Pokemon Image"
+              alt="Pokemon"
               width={500}
               height={500}
             />
@@ -63,17 +64,23 @@ const PokemonPage: React.FC<IPokemonPage> = async ({ params: { name } }) => {
             <h3 className="mb-2 text-xl font-bold">Abilities:</h3>
             <ul className="mb-4 list-inside list-disc">
               {pokemon.abilities.map((item) => (
-                <li key={item.ability?.name}>{item.ability?.name}</li>
+                <li key={uuidv4()}>{item.ability?.name}</li>
               ))}
             </ul>
             <h3 className="mb-2 text-xl font-bold">Moves:</h3>
             <ul className="list-inside list-disc">
               {pokemon.moves.map((item) => (
-                <li key={item.move.name}>{item.move.name}</li>
+                <li key={uuidv4()}>{item.move.name}</li>
               ))}
             </ul>
           </div>
         </div>
+        <Link
+          href="/"
+          className="fixed bottom-4 right-4 mr-4 flex h-10 w-10 items-center justify-center rounded  bg-yellow-500 p-2 text-white"
+        >
+          &larr;
+        </Link>
       </div>
     </div>
   );

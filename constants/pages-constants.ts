@@ -1,0 +1,4 @@
+export enum AppPages {
+  POKEMONS_PAGE = 'POKEMONS_PAGE',
+  POKEMON_PAGE = 'POKEMON_PAGE',
+}
