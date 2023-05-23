@@ -43,7 +43,6 @@ function Page() {
       offset: number;
       currentPage: number;
     }>('pokemonsPage');
-
     if (pageData) {
       setLimit(pageData?.limit);
       setOffset(pageData?.offset);

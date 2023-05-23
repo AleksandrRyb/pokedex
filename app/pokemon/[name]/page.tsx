@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 
@@ -40,9 +39,9 @@ const PokemonPage: React.FC<IPokemonPage> = async ({ params: { name } }) => {
         </div>
         <div className="p-4">
           <div className="flex justify-center">
-            <Image
+            <img
               src={pokemon.sprites.front_default}
-              alt="Pokemon Image"
+              alt="Pokemon"
               width={500}
               height={500}
             />

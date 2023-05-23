@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 
@@ -33,12 +32,12 @@ const PokemonCard = ({ url, selectedPokemonTypes }: IPokemonCard) => {
       <div className="overflow-hidden rounded-lg bg-white shadow-md">
         <div className="flex w-full justify-center">
           {' '}
-          <Image
+          <img
             src={pokemon?.sprites.front_default as string}
             alt="Pokemon Avatar"
-            width={150}
-            height={500}
-            className=" text-center"
+            width={100}
+            height={100}
+            className="h-48 w-48"
           />
         </div>
 
