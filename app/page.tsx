@@ -3,10 +3,10 @@
 import React, { useEffect, useState } from 'react';
 import Select from 'react-select';
 
-import Pagination from '@/components/pagination/pagination';
 import PokemonCard from '@/components/pokemon-card/pokemon-card';
 import PokemonSearchFilter from '@/components/pokemon-filter/pokemon-search-filter';
 import PokemonSelectFilter from '@/components/pokemon-filter/pokemon-select-filter';
+import Pagination from '@/components/pokemon-pagination/pokemon-pagination';
 import {
   customStyles,
   perPageCounts,

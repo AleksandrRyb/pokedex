@@ -9,7 +9,7 @@ interface IPagination {
   forcePage: number;
 }
 
-const Pagination: React.FC<IPagination> = ({
+const PokemonPagination: React.FC<IPagination> = ({
   pageCount,
   onPageChange,
   forcePage,
@@ -37,4 +37,4 @@ const Pagination: React.FC<IPagination> = ({
   );
 };
 
-export default Pagination;
+export default PokemonPagination;
