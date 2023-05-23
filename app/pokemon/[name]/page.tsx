@@ -32,7 +32,7 @@ const PokemonPage: React.FC<IPokemonPage> = async ({ params: { name } }) => {
   return (
     <div className="container mx-auto min-w-min px-4 py-8">
       <div className="overflow-hidden rounded-lg bg-white shadow-lg">
-        <div className="bg-blue-500 px-4 py-6">
+        <div className="bg-yellow-500  px-4 py-6">
           <h1 className="text-center text-3xl font-bold text-white">
             {capitalize(pokemon.name)} Detail Page
           </h1>
@@ -74,6 +74,12 @@ const PokemonPage: React.FC<IPokemonPage> = async ({ params: { name } }) => {
             </ul>
           </div>
         </div>
+        <button
+          className="fixed bottom-4 right-4 mr-4 flex h-10 w-10 items-center justify-center rounded  bg-yellow-500 p-2 text-white"
+          type="button"
+        >
+          &larr;
+        </button>
       </div>
     </div>
   );
