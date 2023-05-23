@@ -1,4 +1,5 @@
 import React from 'react';
+import type { MultiValue, SingleValue } from 'react-select';
 import Select from 'react-select';
 
 import { customStyles } from '@/constants/ui-libriries-constants';
@@ -7,9 +8,15 @@ import type { NameUrlPair } from '@/types/Pokemon';
 
 interface IPokemonSelectFilter {
   handleTypeSelection: any;
+  value:
+    | SingleValue<{ label: string; value: string }>
+    | MultiValue<{ label: string; value: string }>;
 }
 
-const PokemonSelectFilter = ({ handleTypeSelection }: IPokemonSelectFilter) => {
+const PokemonSelectFilter = ({
+  handleTypeSelection,
+  value,
+}: IPokemonSelectFilter) => {
   const { data: pokemonTypes, isLoading: isLoadingPokemonTypes } =
     useGetPokemonTypesQuery(null);
 
@@ -19,6 +26,7 @@ const PokemonSelectFilter = ({ handleTypeSelection }: IPokemonSelectFilter) => {
     <div>
       <Select
         styles={customStyles}
+        value={value}
         className="mx-4"
         onChange={handleTypeSelection}
         isMulti
