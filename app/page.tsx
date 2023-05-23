@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import type { SingleValue } from 'react-select';
 import Select from 'react-select';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -22,15 +23,22 @@ import {
 
 function Page() {
   const [searchTerm, setSearchTerm] = useState('');
+
   const [selectedPokemonTypes, setSelectedPokemonTypes] = useState<string[]>(
     []
   );
+
   const [offset, setOffset] = useState<number>(0);
-  const [limit, setLimit] = useState<number>(perPageCounts[0].value);
+
+  const [limit, setLimit] = useState<{ label: number; value: number }>(
+    perPageCounts[0]
+  );
+
   const [currentPage, setCurrentPage] = useState<number>(0);
+
   const { data: pokemonList, isLoading: isPokemonListLoading } =
     useGetPokemonListQuery({
-      limit,
+      limit: limit.value,
       offset,
     });
 
@@ -40,7 +48,7 @@ function Page() {
 
   useEffect(() => {
     const pageData = getItemFromSessionStorage<{
-      limit: number;
+      limit: { label: number; value: number };
       offset: number;
       currentPage: number;
     }>('pokemonsPage');
@@ -64,7 +72,7 @@ function Page() {
 
   const handlePageChange = (selectedItem: { selected: number }) => {
     const calculateOffsetData = {
-      limit,
+      limit: limit.value,
       totalCount: pokemonList?.count as number,
       currentPage: selectedItem.selected,
     };
@@ -80,6 +88,24 @@ function Page() {
     setOffset(calculatedOffset);
   };
 
+  const handleLimitChange = (
+    data: SingleValue<{ label: number; value: number }>
+  ) => {
+    setLimit((prevState) => {
+      saveItemToSessionStorage('pokemonsPage', {
+        limit: data,
+        offset,
+        currentPage,
+      });
+
+      return {
+        ...prevState,
+        label: data?.label as number,
+        value: data?.value as number,
+      };
+    });
+  };
+
   if (isPokemonListLoading) return <div>Loading...</div>;
 
   return (
@@ -90,9 +116,10 @@ function Page() {
       />
       <PokemonSelectFilter handleTypeSelection={handleTypeSelection} />
       <Select
+        value={limit}
         styles={customStyles}
         options={perPageCounts}
-        onChange={(data) => setLimit(data?.value as number)}
+        onChange={handleLimitChange}
         defaultValue={perPageCounts[0]}
         className="mx-4 mt-4"
         placeholder="Show pokemons per page"
@@ -108,7 +135,10 @@ function Page() {
       </div>
 
       <Pagination
-        pageCount={calculatePageCount(pokemonList?.count as number, limit)}
+        pageCount={calculatePageCount(
+          pokemonList?.count as number,
+          limit.value
+        )}
         onPageChange={handlePageChange}
         forcePage={currentPage}
       />
