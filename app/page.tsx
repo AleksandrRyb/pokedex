@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Select from 'react-select';
+import { v4 as uuidv4 } from 'uuid';
 
 import PokemonCard from '@/components/pokemon-card/pokemon-card';
 import PokemonSearchFilter from '@/components/pokemon-filter/pokemon-search-filter';
@@ -99,7 +100,7 @@ function Page() {
       <div className="flex flex-wrap">
         {filteredPokemons?.map((pokemon: NameUrlPair) => (
           <PokemonCard
-            key={pokemon.url}
+            key={uuidv4()}
             selectedPokemonTypes={selectedPokemonTypes}
             url={pokemon.url}
           />
