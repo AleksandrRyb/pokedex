@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import React from 'react';
 
 import { POKEMON_API_BASE_URL } from '@/constants/services-constants';
@@ -74,12 +75,12 @@ const PokemonPage: React.FC<IPokemonPage> = async ({ params: { name } }) => {
             </ul>
           </div>
         </div>
-        <button
+        <Link
+          href="/"
           className="fixed bottom-4 right-4 mr-4 flex h-10 w-10 items-center justify-center rounded  bg-yellow-500 p-2 text-white"
-          type="button"
         >
           &larr;
-        </button>
+        </Link>
       </div>
     </div>
   );
