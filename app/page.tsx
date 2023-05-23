@@ -61,9 +61,6 @@ function Page() {
   }, []);
 
   const handleTypeSelection = (types: { value: string; label: string }[]) => {
-    // const onlyTypesValues = types.map(
-    //   (type: { value: string; label: string }) => type.value
-    // );
     setSelectedPokemonTypes([...types]);
   };
 
