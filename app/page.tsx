@@ -21,7 +21,9 @@ import {
 
 function Page() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedPokemonTypes, setSelectedPokemonTypes] = useState<any[]>([]);
+  const [selectedPokemonTypes, setSelectedPokemonTypes] = useState<string[]>(
+    []
+  );
   const [offset, setOffset] = useState<number>(0);
   const [limit, setLimit] = useState<number>(perPageCounts[0].value);
   const [currentPage, setCurrentPage] = useState<number>(0);
@@ -49,8 +51,10 @@ function Page() {
     }
   }, []);
 
-  const handleTypeSelection = (types: any) => {
-    const onlyTypesValues = types.map((type: any) => type.value);
+  const handleTypeSelection = (types: { value: string; label: string }[]) => {
+    const onlyTypesValues = types.map(
+      (type: { value: string; label: string }) => type.value
+    );
     setSelectedPokemonTypes([...onlyTypesValues]);
   };
 
