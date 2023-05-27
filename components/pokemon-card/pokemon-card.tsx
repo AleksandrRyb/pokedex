@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import React from 'react';
-import type { SingleValue } from 'react-select';
 
 import { useGetPokemonQuery } from '@/redux/services/pokemon-api';
 
@@ -10,22 +9,13 @@ import PokemonCardLoader from './pokemon-card-loader';
 
 interface IPokemonCard {
   url: string;
-  selectedPokemonTypes: SingleValue<{ label: string; value: string }>[];
 }
 
-const PokemonCard = ({ url, selectedPokemonTypes }: IPokemonCard) => {
+const PokemonCard = ({ url }: IPokemonCard) => {
   const { data: pokemon, isLoading: isPokemonLoading } =
     useGetPokemonQuery(url);
 
   if (isPokemonLoading) return <PokemonCardLoader />;
-
-  if (
-    !selectedPokemonTypes?.some(
-      (obj) => obj?.value === pokemon?.types[0].type.name
-    ) &&
-    selectedPokemonTypes.length > 0
-  )
-    return null;
 
   return (
     <Link

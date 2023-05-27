@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import type { SingleValue } from 'react-select';
 import Select from 'react-select';
 import { v4 as uuidv4 } from 'uuid';
@@ -9,18 +9,13 @@ import PokemonCard from '@/components/pokemon-card/pokemon-card';
 import PokemonSearchFilter from '@/components/pokemon-filter/pokemon-search-filter';
 import PokemonSelectFilter from '@/components/pokemon-filter/pokemon-select-filter';
 import Pagination from '@/components/pokemon-pagination/pokemon-pagination';
-import { AppPages } from '@/constants/pages-constants';
 import {
   customStyles,
   perPageCounts,
 } from '@/constants/ui-libriries-constants';
-import { useGetPokemonListQuery } from '@/redux/services/pokemon-api';
+import { useAppSelector } from '@/hooks/use-app-selector';
 import type { NameUrlPair } from '@/types/Pokemon';
 import { calculateOffset, calculatePageCount } from '@/utils/math-utils';
-import {
-  getItemFromSessionStorage,
-  saveItemToSessionStorage,
-} from '@/utils/storage-utils';
 
 function Page() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -37,28 +32,9 @@ function Page() {
 
   const [currentPage, setCurrentPage] = useState<number>(0);
 
-  const { data: pokemonList, isLoading: isPokemonListLoading } =
-    useGetPokemonListQuery({
-      limit: limit.value,
-      offset,
-    });
-
-  const filteredPokemons = pokemonList?.results.filter((pokemon) => {
-    return pokemon.name.toLowerCase().includes(searchTerm.toLowerCase());
-  });
-
-  useEffect(() => {
-    const pageData = getItemFromSessionStorage<{
-      limit: { label: number; value: number };
-      offset: number;
-      currentPage: number;
-    }>(AppPages.POKEMONS_PAGE);
-    if (pageData) {
-      setLimit(pageData?.limit);
-      setOffset(pageData?.offset);
-      setCurrentPage(pageData?.currentPage);
-    }
-  }, []);
+  const { pokemonList, isPokemonListLoading } = useAppSelector(
+    (state) => state.pokemonReducer
+  );
 
   const handleTypeSelection = (types: { value: string; label: string }[]) => {
     setSelectedPokemonTypes([...types]);
@@ -71,17 +47,12 @@ function Page() {
   const handlePageChange = (selectedItem: { selected: number }) => {
     const calculateOffsetData = {
       limit: limit.value,
-      totalCount: pokemonList?.count as number,
+      totalCount: pokemonList?.length,
       currentPage: selectedItem.selected,
     };
 
     const calculatedOffset = calculateOffset(calculateOffsetData);
 
-    saveItemToSessionStorage(AppPages.POKEMONS_PAGE, {
-      limit,
-      offset: calculatedOffset,
-      currentPage: selectedItem.selected,
-    });
     setCurrentPage(selectedItem.selected);
     setOffset(calculatedOffset);
     setSelectedPokemonTypes([]);
@@ -91,12 +62,6 @@ function Page() {
     data: SingleValue<{ label: number; value: number }>
   ) => {
     setLimit((prevState) => {
-      saveItemToSessionStorage(AppPages.POKEMONS_PAGE, {
-        limit: data,
-        offset,
-        currentPage,
-      });
-
       return {
         ...prevState,
         label: data?.label as number,
@@ -127,20 +92,13 @@ function Page() {
         placeholder="Show pokemons per page"
       />
       <div className="flex flex-wrap">
-        {filteredPokemons?.map((pokemon: NameUrlPair) => (
-          <PokemonCard
-            key={uuidv4()}
-            selectedPokemonTypes={selectedPokemonTypes}
-            url={pokemon.url}
-          />
+        {pokemonList.map((pokemon: NameUrlPair) => (
+          <PokemonCard key={uuidv4()} url={pokemon.url} />
         ))}
       </div>
 
       <Pagination
-        pageCount={calculatePageCount(
-          pokemonList?.count as number,
-          limit.value
-        )}
+        pageCount={calculatePageCount(pokemonList.length, limit.value)}
         onPageChange={handlePageChange}
         forcePage={currentPage}
       />

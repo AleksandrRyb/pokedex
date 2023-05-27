@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { createLogger } from 'redux-logger';
 
+import pokemonReducer from './reducers/pokemon-reducer';
 import { pokemonApi } from './services/pokemon-api';
 
 const loggerMiddleware = createLogger();
@@ -8,6 +9,7 @@ const loggerMiddleware = createLogger();
 export const store = configureStore({
   reducer: {
     [pokemonApi.reducerPath]: pokemonApi.reducer,
+    pokemonReducer,
   },
   devTools: process.env.NODE_ENV !== 'production',
   middleware: (getDefaultMiddleware) =>

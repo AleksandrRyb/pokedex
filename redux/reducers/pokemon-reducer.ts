@@ -7,7 +7,7 @@ import * as pokemonActions from '../actions/pokemon-actions';
 type PokemonReducer = {
   isPokemonListLoading: boolean;
   error: ReturnType<typeof Error> | null;
-  list: NameUrlPair[] | [];
+  pokemonList: NameUrlPair[] | [];
 
   isPaginateByLocalData: boolean;
 
@@ -29,7 +29,7 @@ type PokemonReducer = {
 const initialState = {
   isPokemonListLoading: false,
   error: null,
-  list: [],
+  pokemonList: [],
 
   isPaginateByLocalData: false,
 
@@ -48,7 +48,7 @@ const initialState = {
   },
 };
 
-export const pokemonReducer = createReducer<PokemonReducer>(
+const pokemonReducer = createReducer<PokemonReducer>(
   initialState,
   (builder) => {
     builder
@@ -57,11 +57,22 @@ export const pokemonReducer = createReducer<PokemonReducer>(
       })
       .addCase(pokemonActions.requestPokemonsListSuccess, (state, action) => {
         state.isPokemonListLoading = false;
-        state.list = action.payload.list;
+        state.pokemonList = action.payload.pokemonList;
       })
       .addCase(pokemonActions.requestPokemonsListError, (state, action) => {
         state.isPokemonListLoading = false;
         state.error = action.payload.error;
+      })
+      .addCase(pokemonActions.setCurrentPageAction, (state, action) => {
+        state.paginationData.currentPage = action.payload.currentPage;
+      })
+      .addCase(pokemonActions.setOffsetAction, (state, action) => {
+        state.paginationData.offset = action.payload.offset;
+      })
+      .addCase(pokemonActions.setLimitAction, (state, action) => {
+        state.paginationData.limit = action.payload.limit;
       });
   }
 );
+
+export default pokemonReducer;
