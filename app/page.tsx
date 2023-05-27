@@ -13,7 +13,13 @@ import {
   customStyles,
   perPageCounts,
 } from '@/constants/ui-libriries-constants';
+import { useAppDispatch } from '@/hooks/use-app-dispatch';
 import { useAppSelector } from '@/hooks/use-app-selector';
+import {
+  setCurrentPageAction,
+  setLimitAction,
+  setOffsetAction,
+} from '@/redux/actions/pokemon-actions';
 import type { NameUrlPair } from '@/types/Pokemon';
 import { calculateOffset, calculatePageCount } from '@/utils/math-utils';
 
@@ -36,6 +42,12 @@ function Page() {
     (state) => state.pokemonReducer
   );
 
+  const dispatch = useAppDispatch();
+
+  // useEffect(() => {
+  //   dispatch(requestPokemonsList());
+  // }, []);
+
   const handleTypeSelection = (types: { value: string; label: string }[]) => {
     setSelectedPokemonTypes([...types]);
   };
@@ -55,12 +67,17 @@ function Page() {
 
     setCurrentPage(selectedItem.selected);
     setOffset(calculatedOffset);
-    setSelectedPokemonTypes([]);
+
+    dispatch(setLimitAction(limit.value));
+    dispatch(setOffsetAction(calculatedOffset));
+    dispatch(setCurrentPageAction(selectedItem.selected));
   };
 
   const handleLimitChange = (
     data: SingleValue<{ label: number; value: number }>
   ) => {
+    dispatch(setLimitAction(data?.value));
+
     setLimit((prevState) => {
       return {
         ...prevState,
