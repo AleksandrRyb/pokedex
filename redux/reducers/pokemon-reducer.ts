@@ -8,6 +8,7 @@ type PokemonReducer = {
   isPokemonListLoading: boolean;
   error: ReturnType<typeof Error> | null;
   pokemonList: NameUrlPair[] | [];
+  pokemonCount: number;
 
   isPaginateByLocalData: boolean;
 
@@ -30,6 +31,7 @@ const initialState = {
   isPokemonListLoading: false,
   error: null,
   pokemonList: [],
+  pokemonCount: 0,
 
   isPaginateByLocalData: false,
 
@@ -58,6 +60,7 @@ const pokemonReducer = createReducer<PokemonReducer>(
       .addCase(pokemonActions.requestPokemonsListSuccess, (state, action) => {
         state.isPokemonListLoading = false;
         state.pokemonList = action.payload.pokemonList;
+        state.pokemonCount = action.payload.pokemonCount;
       })
       .addCase(pokemonActions.requestPokemonsListError, (state, action) => {
         state.isPokemonListLoading = false;

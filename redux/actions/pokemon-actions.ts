@@ -6,10 +6,11 @@ export const requestPokemonsList = createAction('pokemons/requestPokemonsList');
 
 export const requestPokemonsListSuccess = createAction(
   'pokemons/requestPokemonsListSuccess',
-  (pokemonList: NameUrlPair[]) => {
+  (data: { results: NameUrlPair[]; count: number }) => {
     return {
       payload: {
-        pokemonList,
+        pokemonList: data.results,
+        pokemonCount: data.count,
       },
     };
   }

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import type { SingleValue } from 'react-select';
 import Select from 'react-select';
 import { v4 as uuidv4 } from 'uuid';
@@ -16,6 +16,7 @@ import {
 import { useAppDispatch } from '@/hooks/use-app-dispatch';
 import { useAppSelector } from '@/hooks/use-app-selector';
 import {
+  requestPokemonsList,
   setCurrentPageAction,
   setLimitAction,
   setOffsetAction,
@@ -38,15 +39,15 @@ function Page() {
 
   const [currentPage, setCurrentPage] = useState<number>(0);
 
-  const { pokemonList, isPokemonListLoading } = useAppSelector(
+  const { pokemonList, isPokemonListLoading, pokemonCount } = useAppSelector(
     (state) => state.pokemonReducer
   );
 
   const dispatch = useAppDispatch();
 
-  // useEffect(() => {
-  //   dispatch(requestPokemonsList());
-  // }, []);
+  useEffect(() => {
+    dispatch(requestPokemonsList());
+  }, []);
 
   const handleTypeSelection = (types: { value: string; label: string }[]) => {
     setSelectedPokemonTypes([...types]);
@@ -59,7 +60,7 @@ function Page() {
   const handlePageChange = (selectedItem: { selected: number }) => {
     const calculateOffsetData = {
       limit: limit.value,
-      totalCount: pokemonList?.length,
+      totalCount: pokemonCount,
       currentPage: selectedItem.selected,
     };
 
@@ -71,6 +72,7 @@ function Page() {
     dispatch(setLimitAction(limit.value));
     dispatch(setOffsetAction(calculatedOffset));
     dispatch(setCurrentPageAction(selectedItem.selected));
+    dispatch(requestPokemonsList());
   };
 
   const handleLimitChange = (
@@ -115,7 +117,7 @@ function Page() {
       </div>
 
       <Pagination
-        pageCount={calculatePageCount(pokemonList.length, limit.value)}
+        pageCount={calculatePageCount(pokemonCount, limit.value)}
         onPageChange={handlePageChange}
         forcePage={currentPage}
       />
