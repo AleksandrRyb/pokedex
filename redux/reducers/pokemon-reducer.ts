@@ -57,23 +57,36 @@ const pokemonReducer = createReducer<PokemonReducer>(
       .addCase(pokemonActions.requestPokemonsList, (state) => {
         state.isPokemonListLoading = true;
       })
+
       .addCase(pokemonActions.requestPokemonsListSuccess, (state, action) => {
         state.isPokemonListLoading = false;
         state.pokemonList = action.payload.pokemonList;
         state.pokemonCount = action.payload.pokemonCount;
       })
+
       .addCase(pokemonActions.requestPokemonsListError, (state, action) => {
         state.isPokemonListLoading = false;
         state.error = action.payload.error;
       })
+
       .addCase(pokemonActions.setCurrentPageAction, (state, action) => {
         state.paginationData.currentPage = action.payload.currentPage;
       })
+
       .addCase(pokemonActions.setOffsetAction, (state, action) => {
         state.paginationData.offset = action.payload.offset;
       })
+
       .addCase(pokemonActions.setLimitAction, (state, action) => {
         state.paginationData.limit = action.payload.limit;
+      })
+
+      .addCase(pokemonActions.setRandomPokemonTypeAction, (state, action) => {
+        state.filters.pokemonType = action.payload.type;
+      })
+
+      .addCase(pokemonActions.setPokemonNameAction, (state, action) => {
+        state.filters.pokemonName = action.payload.name;
       });
   }
 );

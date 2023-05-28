@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import type { SingleValue } from 'react-select';
+import type { MultiValue, SingleValue } from 'react-select';
 import Select from 'react-select';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -49,7 +49,12 @@ function Page() {
     dispatch(requestPokemonsList());
   }, []);
 
-  const handleTypeSelection = (types: { value: string; label: string }[]) => {
+  const handleTypeSelection = (
+    types: MultiValue<{
+      label: string;
+      value: string;
+    }>
+  ) => {
     setSelectedPokemonTypes([...types]);
   };
 

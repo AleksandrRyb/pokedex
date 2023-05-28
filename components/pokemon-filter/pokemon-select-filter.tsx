@@ -7,7 +7,12 @@ import { useGetPokemonTypesQuery } from '@/redux/services/pokemon-api';
 import type { NameUrlPair } from '@/types/Pokemon';
 
 interface IPokemonSelectFilter {
-  handleTypeSelection: any;
+  handleTypeSelection: (
+    newValue: MultiValue<{
+      label: string;
+      value: string;
+    }>
+  ) => void;
   value:
     | SingleValue<{ label: string; value: string }>
     | MultiValue<{ label: string; value: string }>;
