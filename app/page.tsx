@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import type { SingleValue } from 'react-select';
+import debounce from 'lodash.debounce';
+import React, { useEffect, useRef, useState } from 'react';
+import type { MultiValue, SingleValue } from 'react-select';
 import Select from 'react-select';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -9,27 +10,31 @@ import PokemonCard from '@/components/pokemon-card/pokemon-card';
 import PokemonSearchFilter from '@/components/pokemon-filter/pokemon-search-filter';
 import PokemonSelectFilter from '@/components/pokemon-filter/pokemon-select-filter';
 import Pagination from '@/components/pokemon-pagination/pokemon-pagination';
-import { AppPages } from '@/constants/pages-constants';
 import {
   customStyles,
   perPageCounts,
 } from '@/constants/ui-libriries-constants';
-import { useGetPokemonListQuery } from '@/redux/services/pokemon-api';
+import { useAppDispatch } from '@/hooks/use-app-dispatch';
+import { useAppSelector } from '@/hooks/use-app-selector';
+import {
+  clearPokemonListByType,
+  clearPokemonNameAction,
+  requestPokemonsList,
+  setCurrentPageAction,
+  setLimitAction,
+  setOffsetAction,
+  setPokemonNameAction,
+  setRandomPokemonTypeAction,
+} from '@/redux/actions/pokemon-actions';
 import type { NameUrlPair } from '@/types/Pokemon';
 import { calculateOffset, calculatePageCount } from '@/utils/math-utils';
-import {
-  getItemFromSessionStorage,
-  saveItemToSessionStorage,
-} from '@/utils/storage-utils';
 
 function Page() {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [pokemonName, setPokemonName] = useState('');
 
   const [selectedPokemonTypes, setSelectedPokemonTypes] = useState<
     { label: string; value: string }[]
   >([]);
-
-  const [offset, setOffset] = useState<number>(0);
 
   const [limit, setLimit] = useState<{ label: number; value: number }>(
     perPageCounts[0]
@@ -37,82 +42,108 @@ function Page() {
 
   const [currentPage, setCurrentPage] = useState<number>(0);
 
-  const { data: pokemonList, isLoading: isPokemonListLoading } =
-    useGetPokemonListQuery({
-      limit: limit.value,
-      offset,
-    });
+  const pokemonNameRef = useRef<HTMLInputElement>(null);
 
-  const filteredPokemons = pokemonList?.results.filter((pokemon) => {
-    return pokemon.name.toLowerCase().includes(searchTerm.toLowerCase());
-  });
+  const {
+    pokemonList,
+    pokemonCount,
+    isGetPokemonByName,
+    paginationData,
+    filters,
+  } = useAppSelector((state) => state.pokemonReducer);
+
+  const dispatch = useAppDispatch();
+
+  const debouncedHandler = debounce((value: string) => {
+    if (!value) {
+      dispatch(clearPokemonNameAction());
+    }
+    dispatch(requestPokemonsList());
+    setPokemonName(value);
+  }, 500);
 
   useEffect(() => {
-    const pageData = getItemFromSessionStorage<{
-      limit: { label: number; value: number };
-      offset: number;
-      currentPage: number;
-    }>(AppPages.POKEMONS_PAGE);
-    if (pageData) {
-      setLimit(pageData?.limit);
-      setOffset(pageData?.offset);
-      setCurrentPage(pageData?.currentPage);
+    setCurrentPage(paginationData.currentPage);
+    setSelectedPokemonTypes(filters.pokemonTypes);
+    setLimit({ value: paginationData.limit, label: paginationData.limit });
+    if (pokemonNameRef.current) {
+      pokemonNameRef.current.value = filters.pokemonName;
     }
+    dispatch(requestPokemonsList());
   }, []);
 
-  const handleTypeSelection = (types: { value: string; label: string }[]) => {
+  useEffect(() => {
+    if (pokemonName.length) {
+      dispatch(setPokemonNameAction(pokemonName));
+      dispatch(requestPokemonsList());
+    }
+
+    return () => {
+      debouncedHandler.cancel();
+    };
+  }, [pokemonName]);
+
+  const handleTypeSelection = (
+    types: MultiValue<{
+      label: string;
+      value: string;
+    }>
+  ) => {
+    if (!types.length) {
+      dispatch(clearPokemonListByType());
+    } else {
+      dispatch(
+        setRandomPokemonTypeAction(types as { value: string; label: string }[])
+      );
+    }
+
     setSelectedPokemonTypes([...types]);
+    dispatch(setOffsetAction(0));
+    setCurrentPage(0);
+    dispatch(setCurrentPageAction(0));
   };
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
+    debouncedHandler(event.target.value);
   };
 
   const handlePageChange = (selectedItem: { selected: number }) => {
     const calculateOffsetData = {
       limit: limit.value,
-      totalCount: pokemonList?.count as number,
+      totalCount: pokemonCount,
       currentPage: selectedItem.selected,
     };
 
     const calculatedOffset = calculateOffset(calculateOffsetData);
 
-    saveItemToSessionStorage(AppPages.POKEMONS_PAGE, {
-      limit,
-      offset: calculatedOffset,
-      currentPage: selectedItem.selected,
-    });
     setCurrentPage(selectedItem.selected);
-    setOffset(calculatedOffset);
-    setSelectedPokemonTypes([]);
+
+    dispatch(setLimitAction(limit.value));
+    dispatch(setOffsetAction(calculatedOffset));
+    dispatch(setCurrentPageAction(selectedItem.selected));
+    dispatch(requestPokemonsList());
   };
 
   const handleLimitChange = (
     data: SingleValue<{ label: number; value: number }>
   ) => {
     setLimit((prevState) => {
-      saveItemToSessionStorage(AppPages.POKEMONS_PAGE, {
-        limit: data,
-        offset,
-        currentPage,
-      });
-
       return {
         ...prevState,
         label: data?.label as number,
         value: data?.value as number,
       };
     });
-  };
 
-  if (isPokemonListLoading) return <div>Loading...</div>;
+    setCurrentPage(0);
+    dispatch(setCurrentPageAction(0));
+    dispatch(setLimitAction(data?.value));
+    dispatch(requestPokemonsList());
+  };
 
   return (
     <>
-      <PokemonSearchFilter
-        handleSearch={handleSearch}
-        searchTerm={searchTerm}
-      />
+      <PokemonSearchFilter handleSearch={handleSearch} ref={pokemonNameRef} />
       <PokemonSelectFilter
         value={selectedPokemonTypes}
         handleTypeSelection={handleTypeSelection}
@@ -126,21 +157,21 @@ function Page() {
         className="mx-4 mt-4"
         placeholder="Show pokemons per page"
       />
-      <div className="flex flex-wrap">
-        {filteredPokemons?.map((pokemon: NameUrlPair) => (
-          <PokemonCard
-            key={uuidv4()}
-            selectedPokemonTypes={selectedPokemonTypes}
-            url={pokemon.url}
-          />
+
+      <div
+        className={`flex flex-wrap ${
+          isGetPokemonByName &&
+          pokemonList.length === 1 &&
+          'h-96 items-center justify-center'
+        }`}
+      >
+        {pokemonList.map((pokemon: NameUrlPair) => (
+          <PokemonCard key={uuidv4()} url={pokemon.url} />
         ))}
       </div>
 
       <Pagination
-        pageCount={calculatePageCount(
-          pokemonList?.count as number,
-          limit.value
-        )}
+        pageCount={calculatePageCount(pokemonCount, limit.value)}
         onPageChange={handlePageChange}
         forcePage={currentPage}
       />
