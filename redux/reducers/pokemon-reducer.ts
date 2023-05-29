@@ -18,7 +18,10 @@ type PokemonReducer = {
 
   filters: {
     pokemonName: string;
-    pokemonType: string | null;
+    pokemonTypes: {
+      label: string;
+      value: string;
+    }[];
   };
 
   paginationData: {
@@ -42,7 +45,7 @@ const initialState = {
 
   filters: {
     pokemonName: '',
-    pokemonType: null,
+    pokemonTypes: [],
   },
 
   paginationData: {
@@ -84,13 +87,14 @@ const pokemonReducer = createReducer<PokemonReducer>(
       })
 
       .addCase(pokemonActions.setRandomPokemonTypeAction, (state, action) => {
-        state.filters.pokemonType = action.payload.type;
+        state.filters.pokemonTypes = action.payload.types;
         state.isGetPokemonByType = action.payload.isGetPokemonByType;
       })
 
       .addCase(pokemonActions.clearPokemonListByType, (state, action) => {
-        state.filters.pokemonType = action.payload.pokemonType;
+        state.filters.pokemonTypes = action.payload.pokemonTypes;
         state.pokemonListByType = action.payload.pokemonListByType;
+        state.isGetPokemonByType = action.payload.isGetPokemonByType;
       })
 
       .addCase(pokemonActions.setPokemonNameAction, (state, action) => {

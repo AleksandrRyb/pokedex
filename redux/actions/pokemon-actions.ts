@@ -1,8 +1,6 @@
 import { createAction } from '@reduxjs/toolkit';
-import type { MultiValue } from 'react-select';
 
 import type { NameUrlPair } from '@/types/Pokemon';
-import { getRandomObject } from '@/utils/array-utils';
 
 export const requestPokemonsList = createAction('pokemons/requestPokemonsList');
 
@@ -65,17 +63,15 @@ export const setCurrentPageAction = createAction(
 export const setRandomPokemonTypeAction = createAction(
   'pokemons/setRandomPokemonTypeAction',
   (
-    types: MultiValue<{
+    types: {
       label: string;
       value: string;
-    }>
+    }[]
   ) => {
-    const type = getRandomObject(types);
-
     return {
       payload: {
-        type,
-        isGetPokemonByType: Boolean(type),
+        types,
+        isGetPokemonByType: Boolean(types),
       },
     };
   }
@@ -98,7 +94,8 @@ export const clearPokemonListByType = createAction(
     return {
       payload: {
         pokemonListByType: [],
-        pokemonType: '',
+        pokemonTypes: [],
+        isGetPokemonByType: false,
       },
     };
   }

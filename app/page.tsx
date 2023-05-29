@@ -1,7 +1,7 @@
 'use client';
 
 import debounce from 'lodash.debounce';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import type { MultiValue, SingleValue } from 'react-select';
 import Select from 'react-select';
 import { v4 as uuidv4 } from 'uuid';
@@ -42,21 +42,33 @@ function Page() {
 
   const [currentPage, setCurrentPage] = useState<number>(0);
 
-  const { pokemonList, pokemonCount, isGetPokemonByName } = useAppSelector(
-    (state) => state.pokemonReducer
-  );
+  const pokemonNameRef = useRef<HTMLInputElement>(null);
+
+  const {
+    pokemonList,
+    pokemonCount,
+    isGetPokemonByName,
+    paginationData,
+    filters,
+  } = useAppSelector((state) => state.pokemonReducer);
 
   const dispatch = useAppDispatch();
 
   const debouncedHandler = debounce((value: string) => {
     if (!value) {
       dispatch(clearPokemonNameAction());
-      dispatch(requestPokemonsList());
     }
+    dispatch(requestPokemonsList());
     setPokemonName(value);
   }, 500);
 
   useEffect(() => {
+    setCurrentPage(paginationData.currentPage);
+    setSelectedPokemonTypes(filters.pokemonTypes);
+    setLimit({ value: paginationData.limit, label: paginationData.limit });
+    if (pokemonNameRef.current) {
+      pokemonNameRef.current.value = filters.pokemonName;
+    }
     dispatch(requestPokemonsList());
   }, []);
 
@@ -79,13 +91,14 @@ function Page() {
   ) => {
     if (!types.length) {
       dispatch(clearPokemonListByType());
+    } else {
+      dispatch(setRandomPokemonTypeAction(types));
     }
 
     setSelectedPokemonTypes([...types]);
     dispatch(setOffsetAction(0));
     setCurrentPage(0);
     dispatch(setCurrentPageAction(0));
-    dispatch(setRandomPokemonTypeAction(types));
   };
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -128,10 +141,7 @@ function Page() {
 
   return (
     <>
-      <PokemonSearchFilter
-        handleSearch={handleSearch}
-        // searchTerm={pokemonName}
-      />
+      <PokemonSearchFilter handleSearch={handleSearch} ref={pokemonNameRef} />
       <PokemonSelectFilter
         value={selectedPokemonTypes}
         handleTypeSelection={handleTypeSelection}
