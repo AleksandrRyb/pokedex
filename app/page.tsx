@@ -20,6 +20,7 @@ import {
   setCurrentPageAction,
   setLimitAction,
   setOffsetAction,
+  setRandomPokemonTypeAction,
 } from '@/redux/actions/pokemon-actions';
 import type { NameUrlPair } from '@/types/Pokemon';
 import { calculateOffset, calculatePageCount } from '@/utils/math-utils';
@@ -55,6 +56,8 @@ function Page() {
       value: string;
     }>
   ) => {
+    dispatch(setRandomPokemonTypeAction(types));
+    dispatch(requestPokemonsList());
     setSelectedPokemonTypes([...types]);
   };
 

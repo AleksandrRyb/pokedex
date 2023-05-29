@@ -83,6 +83,7 @@ const pokemonReducer = createReducer<PokemonReducer>(
 
       .addCase(pokemonActions.setRandomPokemonTypeAction, (state, action) => {
         state.filters.pokemonType = action.payload.type;
+        state.isGetPokemonByType = action.payload.isGetPokemonByType;
       })
 
       .addCase(pokemonActions.setPokemonNameAction, (state, action) => {

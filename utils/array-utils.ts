@@ -6,8 +6,8 @@ export const getRandomObject = (
     value: string;
   }>
 ) => {
-  if (array.length === 1) {
-    return array[0].value;
+  if (!array.length) {
+    return '';
   }
 
   const randomIndex = Math.floor(Math.random() * array.length);

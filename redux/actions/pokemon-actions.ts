@@ -75,6 +75,7 @@ export const setRandomPokemonTypeAction = createAction(
     return {
       payload: {
         type,
+        isGetPokemonByType: Boolean(type),
       },
     };
   }
