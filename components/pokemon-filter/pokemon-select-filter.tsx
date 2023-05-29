@@ -22,10 +22,7 @@ const PokemonSelectFilter = ({
   handleTypeSelection,
   value,
 }: IPokemonSelectFilter) => {
-  const { data: pokemonTypes, isLoading: isLoadingPokemonTypes } =
-    useGetPokemonTypesQuery(null);
-
-  if (isLoadingPokemonTypes) return null;
+  const { data: pokemonTypes } = useGetPokemonTypesQuery(null);
 
   return (
     <div>

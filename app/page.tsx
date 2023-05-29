@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import debounce from 'lodash.debounce';
+import React, { useCallback, useEffect, useState } from 'react';
 import type { MultiValue, SingleValue } from 'react-select';
 import Select from 'react-select';
 import { v4 as uuidv4 } from 'uuid';
@@ -16,23 +17,23 @@ import {
 import { useAppDispatch } from '@/hooks/use-app-dispatch';
 import { useAppSelector } from '@/hooks/use-app-selector';
 import {
+  clearPokemonListByType,
   requestPokemonsList,
   setCurrentPageAction,
   setLimitAction,
   setOffsetAction,
+  setPokemonNameAction,
   setRandomPokemonTypeAction,
 } from '@/redux/actions/pokemon-actions';
 import type { NameUrlPair } from '@/types/Pokemon';
 import { calculateOffset, calculatePageCount } from '@/utils/math-utils';
 
 function Page() {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [pokemonName, setPokemonName] = useState('');
 
   const [selectedPokemonTypes, setSelectedPokemonTypes] = useState<
     { label: string; value: string }[]
   >([]);
-
-  const [offset, setOffset] = useState<number>(0);
 
   const [limit, setLimit] = useState<{ label: number; value: number }>(
     perPageCounts[0]
@@ -40,15 +41,32 @@ function Page() {
 
   const [currentPage, setCurrentPage] = useState<number>(0);
 
-  const { pokemonList, isPokemonListLoading, pokemonCount } = useAppSelector(
+  const { pokemonList, pokemonCount, isGetPokemonByName } = useAppSelector(
     (state) => state.pokemonReducer
   );
 
   const dispatch = useAppDispatch();
 
+  const fetchPokemonsByName = (value: string) => {
+    dispatch(setPokemonNameAction(value));
+    dispatch(requestPokemonsList());
+  };
+
+  const debouncedHandler = useCallback(debounce(fetchPokemonsByName, 500), [
+    pokemonName,
+  ]);
+
   useEffect(() => {
     dispatch(requestPokemonsList());
   }, []);
+
+  useEffect(() => {
+    debouncedHandler(pokemonName);
+
+    return () => {
+      debouncedHandler.cancel();
+    };
+  }, [pokemonName]);
 
   const handleTypeSelection = (
     types: MultiValue<{
@@ -56,7 +74,12 @@ function Page() {
       value: string;
     }>
   ) => {
+    if (!types.length) {
+      dispatch(clearPokemonListByType());
+    }
+
     setSelectedPokemonTypes([...types]);
+    dispatch(setOffsetAction(0));
     setCurrentPage(0);
     dispatch(setCurrentPageAction(0));
     dispatch(setRandomPokemonTypeAction(types));
@@ -64,7 +87,7 @@ function Page() {
   };
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
+    setPokemonName(event.target.value);
   };
 
   const handlePageChange = (selectedItem: { selected: number }) => {
@@ -77,7 +100,6 @@ function Page() {
     const calculatedOffset = calculateOffset(calculateOffsetData);
 
     setCurrentPage(selectedItem.selected);
-    setOffset(calculatedOffset);
 
     dispatch(setLimitAction(limit.value));
     dispatch(setOffsetAction(calculatedOffset));
@@ -102,13 +124,11 @@ function Page() {
     dispatch(requestPokemonsList());
   };
 
-  if (isPokemonListLoading) return <div>Loading...</div>;
-
   return (
     <>
       <PokemonSearchFilter
         handleSearch={handleSearch}
-        searchTerm={searchTerm}
+        searchTerm={pokemonName}
       />
       <PokemonSelectFilter
         value={selectedPokemonTypes}
@@ -123,7 +143,14 @@ function Page() {
         className="mx-4 mt-4"
         placeholder="Show pokemons per page"
       />
-      <div className="flex flex-wrap">
+
+      <div
+        className={`flex flex-wrap ${
+          isGetPokemonByName &&
+          pokemonList.length === 1 &&
+          'h-96 items-center justify-center'
+        }`}
+      >
         {pokemonList.map((pokemon: NameUrlPair) => (
           <PokemonCard key={uuidv4()} url={pokemon.url} />
         ))}

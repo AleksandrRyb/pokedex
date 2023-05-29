@@ -92,6 +92,18 @@ export const addPokemonsToPokemonListByType = createAction(
   }
 );
 
+export const clearPokemonListByType = createAction(
+  'pokemons/clearPokemonListByType',
+  () => {
+    return {
+      payload: {
+        pokemonListByType: [],
+        pokemonType: '',
+      },
+    };
+  }
+);
+
 export const setPokemonNameAction = createAction(
   'pokemons/setPokemonNameAction',
   (name: string) => {

@@ -12,8 +12,13 @@ interface IPokemonCard {
 }
 
 const PokemonCard = ({ url }: IPokemonCard) => {
-  const { data: pokemon, isLoading: isPokemonLoading } =
-    useGetPokemonQuery(url);
+  const {
+    data: pokemon,
+    isLoading: isPokemonLoading,
+    isError,
+  } = useGetPokemonQuery(url);
+
+  if (isError) return <div>Pokemon loading error</div>;
 
   if (isPokemonLoading) return <PokemonCardLoader />;
 

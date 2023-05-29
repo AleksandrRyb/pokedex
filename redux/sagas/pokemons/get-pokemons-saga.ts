@@ -82,6 +82,26 @@ function* getPokemonsByTypeSaga(
   }
 }
 
+function* getPokemonByNameSaga(): any {
+  try {
+    const { filters } = yield select(getPokemonReducer);
+
+    const data = {
+      results: [
+        {
+          url: `${POKEMON_API_BASE_URL}/pokemon/${filters.pokemonName.toLowerCase()}`,
+          name: filters.name,
+        },
+      ],
+      count: 1,
+    };
+
+    yield put(pokemonActions.requestPokemonsListSuccess(data));
+  } catch (error) {
+    yield put(pokemonActions.requestPokemonsListError(error));
+  }
+}
+
 export function* getPokemonsRequestSaga(): Generator<any, void, any> {
   while (true) {
     yield take(pokemonActions.requestPokemonsList);
@@ -90,7 +110,10 @@ export function* getPokemonsRequestSaga(): Generator<any, void, any> {
       yield select(getPokemonReducer);
 
     if (isGetPokemonByName) {
-      // TODO: add logic
+      yield call(getPokemonByNameSaga);
+
+      // eslint-disable-next-line no-continue
+      continue;
     }
 
     if (isGetPokemonByType) {
