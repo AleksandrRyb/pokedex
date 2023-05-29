@@ -56,9 +56,11 @@ function Page() {
       value: string;
     }>
   ) => {
+    setSelectedPokemonTypes([...types]);
+    setCurrentPage(0);
+    dispatch(setCurrentPageAction(0));
     dispatch(setRandomPokemonTypeAction(types));
     dispatch(requestPokemonsList());
-    setSelectedPokemonTypes([...types]);
   };
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -86,8 +88,6 @@ function Page() {
   const handleLimitChange = (
     data: SingleValue<{ label: number; value: number }>
   ) => {
-    dispatch(setLimitAction(data?.value));
-
     setLimit((prevState) => {
       return {
         ...prevState,
@@ -95,6 +95,11 @@ function Page() {
         value: data?.value as number,
       };
     });
+
+    setCurrentPage(0);
+    dispatch(setCurrentPageAction(0));
+    dispatch(setLimitAction(data?.value));
+    dispatch(requestPokemonsList());
   };
 
   if (isPokemonListLoading) return <div>Loading...</div>;

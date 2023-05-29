@@ -81,12 +81,24 @@ export const setRandomPokemonTypeAction = createAction(
   }
 );
 
+export const addPokemonsToPokemonListByType = createAction(
+  'pokemons/addPokemonsToPokemonListByType',
+  (pokemonList: NameUrlPair[]) => {
+    return {
+      payload: {
+        pokemonListByType: pokemonList,
+      },
+    };
+  }
+);
+
 export const setPokemonNameAction = createAction(
   'pokemons/setPokemonNameAction',
   (name: string) => {
     return {
       payload: {
         name,
+        isGetPokemonByName: Boolean(name.length),
       },
     };
   }

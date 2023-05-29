@@ -35,19 +35,48 @@ function* getPokemonsSaga(paginationData: any): Generator<any, void, any> {
   }
 }
 
+function getPaginatedItems(limit: any, currentPage: any, items: any): any {
+  const startIndex = currentPage * limit;
+  const endIndex = startIndex + limit;
+
+  return items.slice(startIndex, endIndex);
+}
+
 function* getPokemonsByTypeSaga(
   paginationData: any
 ): Generator<any, void, any> {
   try {
-    const { filters } = yield select(getPokemonReducer);
+    const { filters, pokemonListByType } = yield select(getPokemonReducer);
 
-    const result = yield call(getPokemonsByType, filters.pokemonType);
-    const pokemonList = result.data.pokemon.map((item) => item.pokemon);
+    if (pokemonListByType.length) {
+      const data = {
+        results: getPaginatedItems(
+          paginationData.limit,
+          paginationData.currentPage,
+          pokemonListByType
+        ),
 
-    const data = { results: pokemonList, count: pokemonList.length };
-    console.log('🚀 ~ file: get-pokemons-saga.ts:45 ~ result:', data);
+        count: pokemonListByType.length,
+      };
 
-    yield put(pokemonActions.requestPokemonsListSuccess(data));
+      yield put(pokemonActions.requestPokemonsListSuccess(data));
+    } else {
+      const result = yield call(getPokemonsByType, filters.pokemonType);
+
+      const pokemonList = result.data.pokemon.map((item) => item.pokemon);
+
+      yield put(pokemonActions.addPokemonsToPokemonListByType(pokemonList));
+
+      const data = { results: pokemonList, count: pokemonList.length };
+
+      data.results = getPaginatedItems(
+        paginationData.limit,
+        paginationData.currentPage,
+        data.results
+      );
+
+      yield put(pokemonActions.requestPokemonsListSuccess(data));
+    }
   } catch (error) {
     yield put(pokemonActions.requestPokemonsListError(error));
   }

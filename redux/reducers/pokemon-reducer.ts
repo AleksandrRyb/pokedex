@@ -8,6 +8,7 @@ type PokemonReducer = {
   isPokemonListLoading: boolean;
   error: ReturnType<typeof Error> | null;
   pokemonList: NameUrlPair[] | [];
+  pokemonListByType: NameUrlPair[] | [];
   pokemonCount: number;
 
   isPaginateByLocalData: boolean;
@@ -31,6 +32,7 @@ const initialState = {
   isPokemonListLoading: false,
   error: null,
   pokemonList: [],
+  pokemonListByType: [],
   pokemonCount: 0,
 
   isPaginateByLocalData: false,
@@ -88,7 +90,14 @@ const pokemonReducer = createReducer<PokemonReducer>(
 
       .addCase(pokemonActions.setPokemonNameAction, (state, action) => {
         state.filters.pokemonName = action.payload.name;
-      });
+      })
+
+      .addCase(
+        pokemonActions.addPokemonsToPokemonListByType,
+        (state, action) => {
+          state.pokemonListByType = action.payload.pokemonListByType;
+        }
+      );
   }
 );
 
