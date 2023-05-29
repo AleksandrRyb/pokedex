@@ -86,7 +86,6 @@ function Page() {
     setCurrentPage(0);
     dispatch(setCurrentPageAction(0));
     dispatch(setRandomPokemonTypeAction(types));
-    dispatch(requestPokemonsList());
   };
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {

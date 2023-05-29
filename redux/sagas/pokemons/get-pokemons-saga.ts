@@ -13,11 +13,7 @@ function getPokemons(limit: number, offset: number): Promise<AxiosResponse> {
   );
 }
 
-function getPokemonsByType(type: string): Promise<AxiosResponse> {
-  return axios.get(`${POKEMON_API_BASE_URL}/type/${type}`);
-}
-
-function getPokemonReducer(state: RootState) {
+export function getPokemonReducer(state: RootState) {
   return state.pokemonReducer;
 }
 
@@ -42,11 +38,11 @@ function getPaginatedItems(limit: any, currentPage: any, items: any): any {
   return items.slice(startIndex, endIndex);
 }
 
-function* getPokemonsByTypeSaga(
+function* returnNeededPokemonByTypeSaga(
   paginationData: any
 ): Generator<any, void, any> {
   try {
-    const { filters, pokemonListByType } = yield select(getPokemonReducer);
+    const { pokemonListByType } = yield select(getPokemonReducer);
 
     if (pokemonListByType.length) {
       const data = {
@@ -58,22 +54,6 @@ function* getPokemonsByTypeSaga(
 
         count: pokemonListByType.length,
       };
-
-      yield put(pokemonActions.requestPokemonsListSuccess(data));
-    } else {
-      const result = yield call(getPokemonsByType, filters.pokemonType);
-
-      const pokemonList = result.data.pokemon.map((item) => item.pokemon);
-
-      yield put(pokemonActions.addPokemonsToPokemonListByType(pokemonList));
-
-      const data = { results: pokemonList, count: pokemonList.length };
-
-      data.results = getPaginatedItems(
-        paginationData.limit,
-        paginationData.currentPage,
-        data.results
-      );
 
       yield put(pokemonActions.requestPokemonsListSuccess(data));
     }
@@ -102,7 +82,7 @@ function* getPokemonByNameSaga(): any {
   }
 }
 
-export function* getPokemonsRequestSaga(): Generator<any, void, any> {
+export function* requestPokemonsRequestSaga(): Generator<any, void, any> {
   while (true) {
     yield take(pokemonActions.requestPokemonsList);
 
@@ -112,14 +92,12 @@ export function* getPokemonsRequestSaga(): Generator<any, void, any> {
     if (isGetPokemonByName) {
       yield call(getPokemonByNameSaga);
 
-      // eslint-disable-next-line no-continue
       continue;
     }
 
     if (isGetPokemonByType) {
-      yield call(getPokemonsByTypeSaga, paginationData);
+      yield call(returnNeededPokemonByTypeSaga, paginationData);
 
-      // eslint-disable-next-line no-continue
       continue;
     }
 

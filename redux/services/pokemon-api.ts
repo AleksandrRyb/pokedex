@@ -18,8 +18,6 @@ export const pokemonApi = createApi({
     }),
     getPokemon: builder.query<Pokemon, string>({
       queryFn: async (_arg, _queryApi, _extraOptions, fetchWithBQ) => {
-        // eslint-disable-next-line no-promise-executor-return
-        await new Promise((resolve) => setTimeout(resolve, 1000));
         const result = await fetchWithBQ(_arg);
 
         return result.data
