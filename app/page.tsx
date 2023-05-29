@@ -92,7 +92,9 @@ function Page() {
     if (!types.length) {
       dispatch(clearPokemonListByType());
     } else {
-      dispatch(setRandomPokemonTypeAction(types));
+      dispatch(
+        setRandomPokemonTypeAction(types as { value: string; label: string }[])
+      );
     }
 
     setSelectedPokemonTypes([...types]);
