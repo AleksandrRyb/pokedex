@@ -115,3 +115,16 @@ export const setPokemonNameAction = createAction(
     };
   }
 );
+
+export const clearPokemonNameAction = createAction(
+  'pokemons/clearPokemonNameAction',
+  () => {
+    return {
+      payload: {
+        name: '',
+        pokemonList: [],
+        isGetPokemonByName: false,
+      },
+    };
+  }
+);

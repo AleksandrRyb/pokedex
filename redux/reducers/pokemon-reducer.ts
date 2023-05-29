@@ -98,6 +98,12 @@ const pokemonReducer = createReducer<PokemonReducer>(
         state.isGetPokemonByName = action.payload.isGetPokemonByName;
       })
 
+      .addCase(pokemonActions.clearPokemonNameAction, (state, action) => {
+        state.filters.pokemonName = action.payload.name;
+        state.isGetPokemonByName = action.payload.isGetPokemonByName;
+        state.pokemonList = action.payload.pokemonList;
+      })
+
       .addCase(
         pokemonActions.addPokemonsToPokemonListByType,
         (state, action) => {

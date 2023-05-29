@@ -1,7 +1,7 @@
 'use client';
 
 import debounce from 'lodash.debounce';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import type { MultiValue, SingleValue } from 'react-select';
 import Select from 'react-select';
 import { v4 as uuidv4 } from 'uuid';
@@ -18,6 +18,7 @@ import { useAppDispatch } from '@/hooks/use-app-dispatch';
 import { useAppSelector } from '@/hooks/use-app-selector';
 import {
   clearPokemonListByType,
+  clearPokemonNameAction,
   requestPokemonsList,
   setCurrentPageAction,
   setLimitAction,
@@ -47,21 +48,23 @@ function Page() {
 
   const dispatch = useAppDispatch();
 
-  const fetchPokemonsByName = (value: string) => {
-    dispatch(setPokemonNameAction(value));
-    dispatch(requestPokemonsList());
-  };
-
-  const debouncedHandler = useCallback(debounce(fetchPokemonsByName, 500), [
-    pokemonName,
-  ]);
+  const debouncedHandler = debounce((value: string) => {
+    if (!value) {
+      dispatch(clearPokemonNameAction());
+      dispatch(requestPokemonsList());
+    }
+    setPokemonName(value);
+  }, 500);
 
   useEffect(() => {
     dispatch(requestPokemonsList());
   }, []);
 
   useEffect(() => {
-    debouncedHandler(pokemonName);
+    if (pokemonName.length) {
+      dispatch(setPokemonNameAction(pokemonName));
+      dispatch(requestPokemonsList());
+    }
 
     return () => {
       debouncedHandler.cancel();
@@ -87,7 +90,7 @@ function Page() {
   };
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPokemonName(event.target.value);
+    debouncedHandler(event.target.value);
   };
 
   const handlePageChange = (selectedItem: { selected: number }) => {
@@ -128,7 +131,7 @@ function Page() {
     <>
       <PokemonSearchFilter
         handleSearch={handleSearch}
-        searchTerm={pokemonName}
+        // searchTerm={pokemonName}
       />
       <PokemonSelectFilter
         value={selectedPokemonTypes}
